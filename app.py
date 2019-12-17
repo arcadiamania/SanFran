@@ -9,6 +9,8 @@ import bcrypt
 from flask_cors import CORS
 from generic_functions import get_pagination_index, valid_id_format, prepare_results, api_link, is_error_message, find_one_document, find_all_documents, update_document, insert_document, delete_item
 
+DEBUG = True
+
 app = Flask(__name__)
 CORS(app)
 
@@ -26,12 +28,14 @@ businesses = db.businesses #select the collection
 users = db.users
 blacklist = db.blacklist
 
-default_ps = 12
+default_ps = 10
 
 def jwt_required(func):
     @wraps(func)
     def jwt_required_wrapper(*args, **kwargs):
         #token = request.args.get('token')
+        if DEBUG:
+          return func(*args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
@@ -54,6 +58,8 @@ def jwt_required(func):
 def admin_required(func):
     @wraps(func)
     def admin_required_wrapper(*args, **kwargs):
+        if DEBUG:
+          return func(*args, **kwargs)
         token = request.headers['x-access-token']
         data = jwt.decode(token, app.config['SECRET_KEY'])
         if data['admin']:
@@ -110,7 +116,9 @@ def show_all_businesses():
         page_size=size
       )
     )
-    print(businesses.name)
+
+    #'<div class="mapouter"><div class="gmap_canvas"><iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=' + encodeURIComponent(address) + '&t=k&z=19&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://www.whatismyip-address.com">show me where i am now</a></div><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div>'
+    print(find_result)
 
     return make_response(jsonify(find_result), 200)
 
@@ -127,7 +135,7 @@ def show_one_business(id):
       )
     )
 
-    if len(find_result) > 0:
+    if find_result and len(find_result['results']) > 0:
       return make_response(jsonify( find_result ),200)
     else:
         return make_response(jsonify({"error": "Business does not exist"}),404)
@@ -164,6 +172,7 @@ def add_business():
       ["business_state", "CA"],
       ["inspection_count", 0],
       ["inspections", []],
+      ["violation_count", 0],
       ["naics_code_description", "Food Services"],
       ["review_count", 0],
       ["reviews", []],
@@ -264,7 +273,10 @@ def fetch_all_reviews(id):
       )
     )
 
-    return make_response(jsonify(find_result), 200)
+    if find_result and len(find_result['results']) > 0:
+      return make_response(jsonify( find_result ),200)
+    else:
+        return make_response(jsonify({"error": "There are no reviews for the business"}), 404)
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/reviews/<string:r_id>", methods=["GET"])
@@ -285,10 +297,10 @@ def fetch_review(b_id, r_id):
       )
     )
 
-    if len(find_result) > 0:
+    if find_result and len(find_result['results']) > 0:
       return make_response(jsonify( find_result ),200)
     else:
-      return make_response(jsonify({"error": "Review does not exist"}),404)
+        return make_response(jsonify({"error": "There is no such review"}), 404)
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/reviews", methods=["POST"])
@@ -305,11 +317,11 @@ def add_new_review(b_id):
     ],
     super_id=b_id,
     required_fields=[
+      "username",
       "stars",
       "text",
     ],
     auto_key_val_pairs=[  # optional_fields are set to None here if not passed in optional_fields
-      ["username", None],
       ["votes", {"down": 0, "up": 0}],
       ["date", datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')],
     ]
@@ -399,7 +411,10 @@ def fetch_all_inspections(id):
       )
     )
 
-    return make_response(jsonify(find_result), 200)
+    if find_result and len(find_result['results']) > 0:
+      return make_response(jsonify( find_result ),200)
+    else:
+        return make_response(jsonify({"error": "There are no inspection for the business"}), 404)
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/inspections/<string:i_id>", methods=["GET"])
@@ -420,10 +435,10 @@ def fetch_inspection(b_id, i_id):
       )
     )
 
-    if len(find_result) > 0:
-      return make_response(jsonify( find_result ),200)
+    if find_result and len(find_result['results']) > 0:
+      return make_response(jsonify(find_result), 200)
     else:
-        return make_response(jsonify({"error": "Inspection does not exist"}),404)
+      return make_response(jsonify({"error": "No such inspection"}), 404)
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/inspections", methods=["POST"])
@@ -553,7 +568,10 @@ def fetch_all_violations(b_id, i_id):
     )
   )
 
-  return make_response(jsonify(find_result), 200)
+  if find_result and len(find_result['results']) > 0:
+    return make_response(jsonify(find_result), 200)
+  else:
+    return make_response(jsonify({"error": "There are no violations for the inspection"}), 404)
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/inspections/<string:i_id>/violations/<string:v_id>", methods=["GET"])
@@ -576,10 +594,10 @@ def fetch_violation(b_id, i_id, v_id):
     )
   )
 
-  if len(find_result) > 0:
+  if find_result and len(find_result['results']) > 0:
     return make_response(jsonify(find_result), 200)
   else:
-    return make_response(jsonify({"error": "Violation does not exist"}), 404)
+    return make_response(jsonify({"error": "No such violation"}), 404)
 
 
 
@@ -763,6 +781,8 @@ def logout():
     else:
         blacklist.insert_one({'token':token})
         return make_response(jsonify({'message':'Logout successful'}), 200)
+
+
 
 
 if __name__ == "__main__":

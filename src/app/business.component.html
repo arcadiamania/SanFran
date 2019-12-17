@@ -18,19 +18,27 @@
 <div class="container" style="margin-top:100px;">
 	<div class="row">
 		<div class="col-sm-12">
-			<div *ngFor = "let business of webService.business | async"><!--C3, from michel email-->
+			<div *ngFor = "let business of webService.b_id.list | async"><!--C3, from michel email-->
 				<div class="card text-white bg-primary mb-3"
 					[routerLink]="['/businesses', business._id]"
 					style="cursor: pointer"><!--C1,19-->
 					<div class="card-header">
-						{{ business.name }}
+						{{ business.business_name }}
 					</div>
 					<div class="card-body">
-						This business is based in
-						{{ business.city }}
+						Location: {{ business.business_address }}, {{ business.business_city }}, {{ business.business_postal_code }}
+					</div>
+					<div class="card-body">
+						<div class="mapouter">
+							<div class="gmap_canvas">
+								<iframe width="400" height="400" id="gmap_canvas" [src]="sanitizer.bypassSecurityTrustResourceUrl(business.business_location)" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+								<!--a href="https://www.whatismyip-address.com">show me where i am now</a-->
+							</div>
+							<style>.mapouter{position:relative;text-align:right;height:400px;width:400px;}.gmap_canvas {overflow:hidden;background:none!important;height:400px;width:400px;}</style>
+						</div>
 					</div>
 					<div class="card-footer">
-						{{ business.review_count }}
+						Showing {{ business.review_count }}
 						reviews available
 					</div>
 					<!--Could add more but nahh-->
@@ -40,30 +48,59 @@
 	</div> <!-- row -->
 </div> <!-- container -->
 
-
-<div class="container"><!--C4 4-->
-	<div class="row">
-		<div class="col-sm-12">
-			<div class="card bg-light mb-3" *ngFor = "let review of webService.reviews_list | async">
-				<div class="card-header">
-					Review by {{ review.username }}
-						on {{ review.date | date }}
-				</div>
-				<div class="card-body">
-					{{ review.text }}
-					<hr>
-					<p><strong>Votes:</strong>
-						{{ review.votes.funny }} funny,
-						{{ review.votes.useful }} useful,
-						{{ review.votes.cool }} cool </p>
-				</div>
-				<div class="card-footer">
-					{{ review.stars }} stars
+<div class="row">
+	<div class="col-sm-12">
+		<div class="card bg-light mb-3" *ngFor = "let review of webService.r.list | async">
+			<div class="card-header">
+				{{ review.stars }} ⭐ review from {{ review.username }}
+					on {{ review.date | date }}
+			</div>
+			<div class="card-body">
+				{{ review.text }}
+			</div>
+			<div class="card-footer">
+				<div class="btn-group btn-group-toggle" data-toggle="buttons">
+				  <label class="btn btn-outline-success"><!--###Add angular class here with 'active' class -->
+					<input type="radio" name="options" id="upVote" autocomplete="off" checked> {{ review.votes.up }} 👍
+				  </label>
+				  <label class="btn btn-outline-secondary">
+					<input type="radio" name="options" id="downVote" autocomplete="off"> {{ review.votes.down }} 👎
+				  </label>
 				</div>
 			</div>
-		</div> <!-- col -->
-	</div> <!-- row -->
-</div> <!-- container -->
+		</div>
+	</div>
+</div>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item" *ngFor = "let pageNav of webService.r.navPages">
+		<a
+			class="page-link"
+			(click)="changePage(pageNav)"
+			[ngClass]="{'':pageCheck(pageNav)}"
+		>
+			{{pageNav.pageText}}
+		</a>
+	</li>
+    <!--li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item"><a class="page-link" href="#">Next</a></li-->
+  </ul>
+</nav>
+
+
+<div class="row">
+	<div class="col-sm-6">
+		<button class="btn btn-primary" (click)="previousPage()">Previous</button>
+	</div>
+	<div class="col-sm-6 text-right">
+		<button class="btn btn-primary" (click)="nextPage()">Next</button>
+	</div>
+</div>
+
+
 
 
 <div *ngIf="authService.loggedIn" class="container"><!--c4 7-->

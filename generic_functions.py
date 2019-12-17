@@ -6,6 +6,7 @@ import datetime
 from functools import wraps
 import bcrypt
 from flask_cors import CORS
+import math
 
 def is_int(string_to_test):
   if isinstance(string_to_test, int):
@@ -102,8 +103,10 @@ def get_dict_vals_by_key(key, var, edit_result_function= None):
 
 # Public
 def prepare_results(documents):
-  print(' before isinstance(documents, tuple)')
-  if isinstance(documents, dict):
+  if isinstance(documents, list):
+    prep = collapse_ids(documents)
+    return prep
+  elif isinstance(documents, dict):
     if 'type' in documents:
       if documents['type'] == 'insert':
         return str(documents['obj']['_id'])
@@ -119,8 +122,11 @@ def prepare_results(documents):
   else:
     print("is documents")
     prep = list(documents)
-    prep = collapse_ids(prep)
-    return prep
+    if prep and len(prep) > 0:
+      prep = collapse_ids(prep)
+      return prep[0]
+    else:
+      return False
 
 
 # Public
@@ -294,9 +300,31 @@ def create_find(id_for_results=None, return_one=False, sub_doc_path=[], sort_obj
     sort_obj = {'$sort': sort_obj}
     pipe_line.append(sort_obj)
 
-  skip_obj = {'$skip': page_index}
-  limit_obj = {'$limit': page_size}
-  pipe_line.extend([skip_obj, limit_obj])
+  current_page = math.ceil(page_index / page_size)+1
+
+  #current_page += 1 if page_index % page_size else 0
+
+  pagination = [
+    {'$group': {
+      '_id': None,
+      'count': {'$sum': 1},
+      'results': {'$push': '$$ROOT'},
+    }}, {'$project': {
+      '_id': 0,
+      'count': 1,
+      'current_page': {'$literal': current_page},
+      'last_page': {'$ceil': {'$divide': ['$count', {'$literal': page_size}]}},
+      'start_index': {'$literal': page_index},
+      'page_size': {'$literal': page_size},
+      'results': {
+        '$slice': [
+          '$results', page_index, page_size
+        ]
+      }
+    }}
+  ]
+
+  pipe_line.extend(pagination)
 
   print(pipe_line)
 

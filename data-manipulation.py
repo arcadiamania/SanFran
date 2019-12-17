@@ -273,10 +273,12 @@ def review_gen(g_l, g_u, m_l, m_u, b_l, b_u, date):
 
 
 for business in data:
+  violation_count = 0
   reviews = []
   business['inspection_count'] = len(business['inspections'])
   business_start_date = datetime.datetime.strptime(business['business_start_date'], '%m/%d/%Y')
   business['business_start_date'] = business_start_date.strftime('%Y/%m/%d %H:%M:%S')
+
   for field in ['business_latitude','business_location','business_longitude','business_phone_number','mail_address','mail_city','mail_state','mail_zipcode','business_phone_number']:
     if business[field] == '':
       business[field] = None
@@ -300,7 +302,7 @@ for business in data:
 
     inspection['violation_count'] = len(inspection['violations'])
     for violation in inspection['violations']:
-
+      violation_count += 1
       if violation['risk_category'] in ["Complaint", "Complaint Reinspection/Followup", "Foodborne Illness Investigation", "Community Health Assessment"]:
         review_min_max['bad_l'] += 1
         review_min_max['bad_u'] += 2
@@ -331,6 +333,7 @@ for business in data:
   #print(reviews)
   business['reviews'] = reviews
   business['review_count'] = len(business['reviews'])
+  business['violation_count'] = violation_count
 
 
 to_json = json.dumps(data, indent=4, sort_keys=True)
@@ -341,4 +344,3 @@ file = open('D:\\Documents\\Final year\\Full stack\\mongodb-san-fran-2.json',"w+
 #file.write(jsonify(bus_list))
 file.write(to_json)
 
-#TODO review_count

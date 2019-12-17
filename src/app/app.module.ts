@@ -10,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';//To reg with main modul
 import { RouterModule } from '@angular/router';//C2,13
 import { HomeComponent } from './home.component';//C2,14
 import { BusinessComponent } from './business.component';//C2,18
-import { ReactiveFormsModule } from '@angular/forms';//c4 6
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';//c4 6
 import { NavComponent } from './nav.component';
 
 var routes = [//C2,14
@@ -23,30 +23,45 @@ var routes = [//C2,14
 		component: BusinessesComponent
 	},
 	{//C2,18
-		path: 'businesses/:id',
+		path: 'businesses/:b_id',
 		component: BusinessComponent
-	}
+	},
+	/*{
+		path: 'businesses/:b_id/inspections',
+		component: InspectionsComponent
+	},
+	{
+		path: 'businesses/:b_id/inspections/:i_id',
+		component: InspectionComponent
+	},*/
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-	BusinessesComponent,//To import custom ts stuff
-	HomeComponent,//C2,14 
-	BusinessComponent, //C2,18
-	NavComponent
+    BusinessesComponent,//To import custom ts stuff
+    HomeComponent,//C2,14
+    BusinessComponent, //C2,18
+    NavComponent,
+	//As there is no reviews components, assuming the last subdoc doesnt need component
+    /*InspectionsComponent,
+	InspectionComponent,*/
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-	HttpClientModule, //include the HttpClientModule in the imports list
-	RouterModule.forRoot(routes),//C2,13
-	ReactiveFormsModule, //c4 6
+    HttpClientModule, //include the HttpClientModule in the imports list
+    RouterModule.forRoot(routes),//C2,13
+    ReactiveFormsModule, //c4 6
+	FormsModule,
+	
   ],
   providers: [
-	WebService,
-	AuthService
+    WebService,
+    AuthService
   ],//specify that the WebService is a Service by including it in the list of providers
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule { }

@@ -18,20 +18,21 @@
 <div class="container" style="margin-top:100px;">
 	<div class="row">
 		<div class="col-sm-12">
-			<div *ngFor = "let business of webService.business_list | async"><!--C3,5 C3,7 C3,10-->
+			<div *ngFor = "let business of webService.b.list | async"><!--webService.serviceStrut.b.list is the source-->
 				<div class="card text-white bg-primary mb-3"
 					[routerLink]="['/businesses', business._id]"
 					style="cursor: pointer"><!--C1,19-->
 					<div class="card-header">
-						{{ business.name }}
+						{{ business.business_name }}
 					</div>
 					<div class="card-body">
-						This business is based in
-						{{ business.city }}
+						@{{ business.business_address }}, {{ business.business_city }}, {{ business.business_postal_code }}
 					</div>
 					<div class="card-footer">
-						{{ business.review_count }}
-						reviews available
+						{{ business.review_count }} reviews available
+					</div>
+					<div class="card-footer">
+						{{ business.violation_count }} violations from {{ business.inspection_count }} inspections
 					</div>
 					<!--Could add more but nahh-->
 				</div>
