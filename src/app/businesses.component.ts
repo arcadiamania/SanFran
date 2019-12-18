@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { WebService } from './web.service';//C2,5
+import { FormBuilder, Validators } from '@angular/forms';//c4, 8
 
 @Component({
   selector: 'businesses',
@@ -8,60 +9,26 @@ import { WebService } from './web.service';//C2,5
 })
 export class BusinessesComponent {
 	private const sHID = 'b';
+	
 	sesStoID = this.sHID + '_page';
 	
 	constructor(//C2,6
-		private webService: WebService
+		private webService: WebService,
+		private formBuilder: FormBuilder
 	){}
 	
-	ngOnInit(){//C2,6
-		console.log('this.sesStoID',this.sesStoID)
+	ngOnInit(){//console.log('this.sesStoID',this.sesStoID)
 		if (sessionStorage[this.sesStoID] && sessionStorage[this.sesStoID] > 0){
 			this.page[this.sesStoID] = sessionStorage[this.sesStoID];
-		}
-		console.log(['sessionStorage',sessionStorage])
+		}//console.log(['sessionStorage',sessionStorage])
 		
 		this.webService.getBusinesses({
 			'page': this.page[this.sesStoID]
 		});
 	}
 	
-	/*nextPage(){
-		let pageN = this.webService[this.sHID].canNextPage(this.page);
-		
-		if (pageN){
-			this.page = pageN;
-			sessionStorage.page = pageN;
-			this.webService.getBusinesses({'page':pageN});
-		}
-	}
-	
-	previousPage(){
-		let pageN = this.webService[this.sHID].canPreviousPage(this.page);
-		
-		if (pageN){
-			this.page = pageN;
-			sessionStorage.page = pageN;
-			this.webService.getBusinesses({'page':pageN});
-		}
-	}*/
-	
-	nextPage(){
-		let pageN = this.webService[this.sHID].canNextPage(this.page[this.sesStoID]);
-		console.log(pageN)
-		
-		if (pageN){
-			this.page[this.sesStoID] = pageN;
-			sessionStorage[this.sesStoID] = pageN;
-			this.webService.getBusinesses({
-				'page':pageN
-			});
-		}
-	}
-	
-	previousPage(){
-		let pageN = this.webService[this.sHID].canPreviousPage(this.page[this.sesStoID]);
-		console.log(pageN)
+	changePage(aPageNav){
+		let pageN = aPageNav.pageNumber;
 		
 		if (pageN){
 			this.page[this.sesStoID] = pageN;

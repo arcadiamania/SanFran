@@ -1,3 +1,5 @@
+#TODO breadcrumbs
+
 from flask import Flask, request, jsonify, make_response
 from bson import ObjectId
 from pymongo import MongoClient
@@ -9,7 +11,7 @@ import bcrypt
 from flask_cors import CORS
 from generic_functions import get_pagination_index, valid_id_format, prepare_results, api_link, is_error_message, find_one_document, find_all_documents, update_document, insert_document, delete_item
 
-DEBUG = True
+DEBUG = False
 
 app = Flask(__name__)
 CORS(app)
@@ -142,7 +144,7 @@ def show_one_business(id):
 
 
 @app.route("/api/v1.0/businesses", methods=["POST"])
-@jwt_required
+#'@jwt_required
 def add_business():
   result = insert_document(
     database_con=businesses,
@@ -189,7 +191,7 @@ def add_business():
 
 
 @app.route("/api/v1.0/businesses/<string:id>", methods=["PUT"])
-@jwt_required
+#@jwt_required
 def edit_business(id):
     if not valid_id_format(id):
         return make_response(jsonify({"error": "id is not a 24 digit hexidecimal string"}),404)
@@ -233,8 +235,8 @@ def edit_business(id):
 
 
 @app.route("/api/v1.0/businesses/<string:id>", methods=["DELETE"])
-@jwt_required
-@admin_required
+#@jwt_required
+#@admin_required
 def delete_business(id):
     #implement deleted count on generic function
     if not valid_id_format(id):
@@ -304,7 +306,7 @@ def fetch_review(b_id, r_id):
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/reviews", methods=["POST"])
-@jwt_required
+#@jwt_required
 def add_new_review(b_id):
   if not valid_id_format(b_id):
     return make_response(jsonify({"error": "Business id is not a 24 digit hexidecimal string"}), 404)
@@ -334,9 +336,64 @@ def add_new_review(b_id):
 
   return make_response(jsonify({"url": api_link(request, new_id=result)}), 201)
 
+@app.route("/api/v1.0/businesses/<string:b_id>/reviews/<string:r_id>/vote/<string:vote>", methods=["GET"])
+#@jwt_required
+def vote_review(b_id, r_id, vote):
+    print(['vote_review 1', b_id, r_id, vote])
+    #Need code to validate what is entered
+    if not valid_id_format(b_id):
+        return make_response(jsonify({"error": "Business id is not a 24 digit hexidecimal string"}),404)
+    elif not valid_id_format(r_id):
+        return make_response(jsonify({"error": "Review id is not a 24 digit hexidecimal string"}),404)
+    if not (vote == "up" or vote == "down"):
+      return make_response(jsonify({"error": "Vote value is invalid"}), 404)
+    #TODO Check if already voted
+
+    print(['vote_review 2', b_id, r_id, vote])
+
+
+
+    find_result = prepare_results(
+      find_one_document(
+        database_con=businesses,
+        id_for_result=r_id,
+        sub_doc_path=[
+          'reviews'
+        ]
+      )
+    )
+
+    print(['vote_review 3', find_result])
+
+    print(['vote_review 4', b_id, r_id, vote])
+    vote_count = find_result['results'][0]['votes'][vote] + 1;
+
+    print(['vote_review 5', vote_count])
+
+    req2 = {'form':{'votes.'+vote: vote_count}}
+
+    #req2['form']['votes.'+vote] = vote_count
+
+    print(['vote_review 5.1', req2])
+
+    update_result = update_document(
+      database_con=businesses,
+      id_val=r_id,
+      request_obj=req2,
+      fields_inc_update=[
+        "reviews"
+      ],
+      auto_key_val_pairs=[
+        ['votes.'+str(vote), vote_count]
+      ]
+    )
+
+    print(['vote_review 6', vote_count, update_result])
+
+    return make_response(jsonify({"updated": "vote"}), 200)
 
 @app.route("/api/v1.0/businesses/<string:b_id>/reviews/<string:r_id>", methods=["PUT"])
-@jwt_required
+#@jwt_required
 def edit_review(b_id, r_id):
     #Need code to validate what is entered
     if not valid_id_format(b_id):
@@ -366,8 +423,8 @@ def edit_review(b_id, r_id):
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/reviews/<string:r_id>", methods=["DELETE"])
-@jwt_required
-@admin_required
+#@jwt_required
+#@admin_required
 def delete_review(b_id, r_id):
     #Need code to validate what is entered
     if not valid_id_format(b_id):
@@ -442,7 +499,7 @@ def fetch_inspection(b_id, i_id):
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/inspections", methods=["POST"])
-@jwt_required
+#@jwt_required
 def add_new_inspection(b_id):
   if not valid_id_format(b_id):
     return make_response(jsonify({"error": "Business id is not a 24 digit hexidecimal string"}), 404)
@@ -477,7 +534,7 @@ def add_new_inspection(b_id):
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/inspections/<string:i_id>", methods=["PUT"])
-@jwt_required
+#@jwt_required
 def edit_inspection(b_id, i_id):
     #Need code to validate what is entered
     if not valid_id_format(b_id):
@@ -525,8 +582,8 @@ def edit_inspection(b_id, i_id):
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/inspections/<string:i_id>", methods=["DELETE"])
-@jwt_required
-@admin_required
+#@jwt_required
+#@admin_required
 def delete_inspection(b_id, i_id):
     #Need code to validate what is entered
     if not valid_id_format(b_id):
@@ -686,8 +743,8 @@ def edit_violation(b_id, i_id, v_id):
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/inspections/<string:i_id>/violations/<string:v_id>", methods=["DELETE"])
-@jwt_required
-@admin_required
+#@jwt_required
+#@admin_required
 def delete_violation(b_id, i_id, v_id):
   # Need code to validate what is entered
   if not valid_id_format(b_id):
@@ -713,6 +770,7 @@ def delete_violation(b_id, i_id, v_id):
 
 @app.route("/api/v1.0/login", methods=["GET"])
 def login():
+    print('logging in')
     auth = request.authorization
 
     if auth:

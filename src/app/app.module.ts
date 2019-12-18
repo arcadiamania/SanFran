@@ -4,16 +4,20 @@ import { AuthService } from './auth.service'; //c5 7
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BusinessesComponent } from './businesses.component';//To import custom ts stuff
 import { WebService } from './web.service';//To reg with main module for service: importing part
 import { HttpClientModule } from '@angular/common/http';//To reg with main module for service: importing part
 import { RouterModule } from '@angular/router';//C2,13
-import { HomeComponent } from './home.component';//C2,14
-import { BusinessComponent } from './business.component';//C2,18
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';//c4 6
-import { NavComponent } from './nav.component';
 
-var routes = [//C2,14
+import { NavComponent } from './nav.component';
+import { HomeComponent } from './home.component';//C2,14
+import { BusinessesComponent } from './businesses.component';//To import custom ts stuff
+import { BusinessComponent } from './business.component';//C2,18
+import { InspectionsComponent } from './inspections.component';//C2,18
+import { InspectionComponent } from './inspection.component';//C2,18
+
+
+var routes = [
 	{
 		path:'',
 		component: HomeComponent
@@ -22,18 +26,18 @@ var routes = [//C2,14
 		path: 'businesses',
 		component: BusinessesComponent
 	},
-	{//C2,18
+	{
 		path: 'businesses/:b_id',
 		component: BusinessComponent
 	},
-	/*{
+	{
 		path: 'businesses/:b_id/inspections',
 		component: InspectionsComponent
 	},
 	{
 		path: 'businesses/:b_id/inspections/:i_id',
 		component: InspectionComponent
-	},*/
+	},
 ];
 
 @NgModule({
@@ -44,8 +48,8 @@ var routes = [//C2,14
     BusinessComponent, //C2,18
     NavComponent,
 	//As there is no reviews components, assuming the last subdoc doesnt need component
-    /*InspectionsComponent,
-	InspectionComponent,*/
+    InspectionsComponent,
+	InspectionComponent,
   ],
   imports: [
     BrowserModule,

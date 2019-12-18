@@ -40,13 +40,15 @@
 		</div> <!-- col -->
 	</div> <!-- row -->
 	
-	<div class="row">
-		<div class="col-sm-6">
-			<button class="btn btn-primary" (click)="previousPage()">Previous</button>
-		</div>
-		<div class="col-sm-6 text-right">
-			<button class="btn btn-primary" (click)="nextPage()">Next</button>
-		</div>
-	</div>
+	
+	<nav aria-label="Page navigation example">
+	  <ul class="pagination justify-content-center">
+		<li class="page-item" style="cursor:pointer"
+		  [ngClass]="{'active': pageNav.isCurrent, 'text-secondary': !pageNav.isPageObj, 'text-primary': !pageNav.isCurrent && pageNav.isPageObj}"
+		  *ngFor = "let pageNav of webService.b.navPages" >
+			<a class="page-link" (click)="changePage(pageNav)">{{pageNav.pageText}}</a>
+		</li>
+	  </ul>
+	</nav>
 	
 </div> <!-- container -->

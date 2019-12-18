@@ -293,8 +293,10 @@ def create_find(id_for_results=None, return_one=False, sub_doc_path=[], sort_obj
 
     pipe_line.extend([sub_match_obj, unwind_obj, replaceRoot_obj])
 
-  #if return_one and len(r_p['r_l_path'].copy()) > 0:
-    #pipe_line.append({'$project': {id_name: id_function(id_for_results)}})
+  if return_one and len(r_p['r_l_path'].copy()) > 0:
+    pipe_line.append({'$match': {id_name: id_function(id_for_results)}})
+
+  #need to add match here for advanced functionility
 
   if sort_obj is not None:
     sort_obj = {'$sort': sort_obj}

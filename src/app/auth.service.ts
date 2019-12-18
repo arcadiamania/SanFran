@@ -13,8 +13,8 @@ export class AuthService {
   auth0Client$ = (from(
     createAuth0Client({
       domain: "dev-gmilmwkg.auth0.com",
-      client_id: "oEEUfl45G0309q7R6eBrjE8sAEXNQvqV",
-      redirect_uri: `http://localhost:4200`
+      client_id: "dCDbtgqRf4McJPYvuWk9tacrs9IOehOq",
+      redirect_uri:  "http://localhost:4200"
     })
   ) as Observable<Auth0Client>).pipe(
     shareReplay(1), // Every subscription receives the same shared value
@@ -117,7 +117,7 @@ export class AuthService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        client_id: "oEEUfl45G0309q7R6eBrjE8sAEXNQvqV",
+        client_id: "dCDbtgqRf4McJPYvuWk9tacrs9IOehOq",
         returnTo: `${window.location.origin}`
       });
     });

@@ -53,7 +53,7 @@
 		<div class="card bg-light mb-3" *ngFor = "let review of webService.r.list | async">
 			<div class="card-header">
 				{{ review.stars }} ⭐ review from {{ review.username }}
-					on {{ review.date | date }}
+					on {{ review.date | date: 'dd MMMM yyyy GGG' }}
 			</div>
 			<div class="card-body">
 				{{ review.text }}
@@ -61,10 +61,14 @@
 			<div class="card-footer">
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
 				  <label class="btn btn-outline-success"><!--###Add angular class here with 'active' class -->
-					<input type="radio" name="options" id="upVote" autocomplete="off" checked> {{ review.votes.up }} 👍
+					<input type="radio" name="options" id="upVote"  autocomplete="off" checked 
+					  (click)="webService.vote(webService.r.url + '/'+ review._id + '/vote/up')">
+					    {{ review.votes.up }} 👍
 				  </label>
 				  <label class="btn btn-outline-secondary">
-					<input type="radio" name="options" id="downVote" autocomplete="off"> {{ review.votes.down }} 👎
+					<input type="radio" name="options" id="downVote"  autocomplete="off" 
+					  (click)="webService.vote(webService.r.url + '/'+ review._id + '/vote/down')">
+					    {{ review.votes.down }} 👎
 				  </label>
 				</div>
 			</div>
@@ -73,51 +77,31 @@
 </div>
 
 <nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <li class="page-item" *ngFor = "let pageNav of webService.r.navPages">
-		<a
-			class="page-link"
-			(click)="changePage(pageNav)"
-			[ngClass]="{'':pageCheck(pageNav)}"
-		>
-			{{pageNav.pageText}}
-		</a>
+  <ul class="pagination justify-content-center">
+    <li class="page-item" style="cursor:pointer"
+	  [ngClass]="{'active': pageNav.isCurrent, 'text-secondary': !pageNav.isPageObj, 'text-primary': !pageNav.isCurrent && pageNav.isPageObj}"
+	  *ngFor = "let pageNav of webService.r.navPages" >
+		<a class="page-link" (click)="changePage(pageNav)">{{pageNav.pageText}}</a>
 	</li>
-    <!--li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item"><a class="page-link" href="#">Next</a></li-->
   </ul>
 </nav>
 
-
-<div class="row">
-	<div class="col-sm-6">
-		<button class="btn btn-primary" (click)="previousPage()">Previous</button>
-	</div>
-	<div class="col-sm-6 text-right">
-		<button class="btn btn-primary" (click)="nextPage()">Next</button>
-	</div>
-</div>
-
-
-
-
-<div *ngIf="authService.loggedIn" class="container"><!--c4 7-->
+<!--div *ngIf="authService.loggedIn" class="container"-->
+<div class="container">
 	<div class="row">
 		<div class="col-sm-12">
 			<h2>Please review this business</h2>
-			<form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
+			<!----><form [formGroup]="theForm" (ngSubmit)="webService.r.onSubmit()">
 				<div class="form-group">
 					<label for="name">Name</label>
 					<input type="text" id="name" name="name" class="form-control" formControlName="name"
-						[ngClass]="{'error': isInvalid('name')}"
+						[ngClass]="{'error': webService.r.isInvalid('name')}"
 					>
 				</div>
 				<div class="form-group">
 					<label for="review">Please leave your review below</label>
 					<textarea id="review" rows="3" name="review" class="form-control" formControlName="review"
-						[ngClass]="{'error': isInvalid('review')}"
+						[ngClass]="{'error': webService.r.isInvalid('review')}"
 					></textarea>
 				</div>
 				<div class="form-group">
@@ -130,8 +114,8 @@
 						<option value="5">5 stars</option>
 					</select>
 				</div>
-				<span *ngIf="isIncomplete()">You must complete all fields</span>
-				<button *ngIf="!isIncomplete()" type="submit" class="btn btn-primary">Submit</button>
+				<span *ngIf="webService.r.isIncomplete()">You must complete all fields</span>
+				<button *ngIf="!webService.r.isIncomplete()" type="submit" class="btn btn-primary">Submit</button>
 			</form>
 		</div>
 	</div>
