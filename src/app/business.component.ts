@@ -33,12 +33,10 @@ export class BusinessComponent {
 			'hasValidation': false
 		}
 	];
-	
-	theForm = {
-		'r':new FormGroup(),
-	};
+
+	theForm = {};
 	sesStoID = this.sHID + '_page';
-	
+
 	constructor(//C2,6
 		private webService: WebService,
 		private route: ActivatedRoute,//C2,20
@@ -46,17 +44,16 @@ export class BusinessComponent {
 		private authService: AuthService,
 		public sanitizer: DomSanitizer
 	){}
-	
+
 	ngOnInit(){
-		console.log(this['formBuilder']['group']({}))
 		this.sesStoID = this.sHID + '_' + this.route.snapshot.params[this.sHID] + '_page';
-		
+
 		if (sessionStorage[this.sesStoID] && sessionStorage[this.sesStoID] > 0){
 			this.page[this.sesStoID] = sessionStorage[this.sesStoID];
 		} else {//Page needs to be created/chnages to valid val (may be a mistake if there are no reviews)
 			sessionStorage[this.sesStoID] = this.page[this.sesStoID];
 		}
-		
+
 		this.webService.getBusiness({
 			snapshot: this.route.snapshot,
 			[this.sHID]: this.route.snapshot.params[this.sHID],
@@ -66,21 +63,21 @@ export class BusinessComponent {
 			'page': this.page[this.sesStoID],
 			//'sessionPageName': this.sesStoID,
 		});
-		/*this.webService.getInspections({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
+		this.webService.getInspections({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
 			'page': this.page[this.sesStoID],
 			//'sessionPageName': this.sesStoID,
-		});*/
+		});
 		//From this point, the updated sHID:b_id and sHID:r are available
-		
+
 		//console.log(this.route.snapshot.params[this.sHID] == this.webService.r.lastID())
 
-		console.log(['busness thForm',this.webService.r,this,this.postFields])
-		this.theForm.r = this.webService.r.setPostForm(this, this.postFields)
+
+		this.theForm['r'] = this.webService['r'].setPostForm(this, this.postFields)
 	}
-	
+
 	changePage(aPageNav){
 		let pageN = aPageNav.pageNumber;
-		
+
 		if (pageN){
 			this.page[this.sesStoID] = pageN;
 			sessionStorage[this.sesStoID] = pageN;
@@ -89,6 +86,6 @@ export class BusinessComponent {
 			});
 		}
 	}
-	
+
 	page={[this.sHID + (('_'+this.route.snapshot.params[this.sHID])+'_page')]:1};
 }

@@ -15,7 +15,7 @@ import { FormBuilder, Validators, FormGroup} from '@angular/forms';
 @Injectable()
 export class WebService {
 	private serviceStrut = {};
-	
+
 	private serviceMapping=[
 		{'sHID':'b',	'getFun':this.getBusinesses,	},
 		{'sHID':'b_id',	'getFun':this.getBusiness,		},
@@ -27,8 +27,8 @@ export class WebService {
 		{'sHID':'v_id',	'getFun':this.getViolation,		},
 		{'sHID':'c',	'getFun':this.getCodes,	},
 	]
-	
-	
+
+
 	/*private serviceShorthand = ['b','b_id','r','r_id','i','i_id','v','v_id'];
 	private mapServiceGets = {
 		'b':this.getBusinesses,
@@ -41,20 +41,20 @@ export class WebService {
 		'v_id':this.getViolation,
 	}*/
 	root = 'http://localhost:5000/api/v1.0';
-	
+
 	constructor(private http: HttpClient){
 		for (let s_m of this.serviceMapping){
 			this.serviceStrut[s_m.sHID] = new this.serviceHelper(s_m.sHID, s_m.getFun, this)//this.root, this.http);
 			this.serviceStrut[s_m.sHID].setSelf(this.serviceStrut[s_m.sHID]);
-			
+
 		};
 	}
-	
+
 	//A data storage structure to help minimize code - will implement for loop if it gets any larger
 	private serviceHelper = function(name, getFun, webService){
 		var _private_list;
 		var _subject = new Subject();
-		
+
 		var _path = [];
 		var _name = name;
 		var _root = webService.root;
@@ -63,17 +63,17 @@ export class WebService {
 		var _pagination = {};
 		//var _session_page_name = false:
 		var _hasError = true;
-		
+
 		var _get = getFun;
 		var _post_form = false;
 		var _post_fields = [];
 		var _web_service = webService;
-		
+
 		this.url;
 		this.list = _subject.asObservable();
 		this.navPages = [];
 		this.hasResults = false;
-		
+
 		this.setGet = function(getFunction){
 			_get = getFunction;
 		};
@@ -87,9 +87,9 @@ export class WebService {
 		};
 		this.setResponce = function (res){
 			console.log(res);
-			
+
 			_hasError = false;
-			
+
 			_pagination = {
 				'start_index': res.start_index,
 				'current_page':res.current_page,
@@ -97,9 +97,9 @@ export class WebService {
 				'page_size':res.page_size,
 				'count':res.count,
 			};
-			
+
 			this.setList(res.results);
-			
+
 			if (res.results.length > 0){
 				this.hasResults=true;
 				if (res.results[0].hasOwnProperty('business_location') && res.results.length <= res.page_size ){
@@ -108,21 +108,21 @@ export class WebService {
 			}else{
 				this.hasResults=false;
 			};
-			
+
 			this.setPages(3);//Number*2+1 is max pages to display - based on digit
-			
+
 			console.log(this.navPages)
 			this.url = this.fullPath();
-			
+
 			return _self;
 		};
 		this.setPath = function (pathList){
 			//Supports single literal and array
 			_path = (pathList.hasOwnProperty('length')) ? pathList : [pathList];
-			
+
 			return true;
 		};
-		
+
 		this.name = function(){
 			return _name;
 		};
@@ -157,11 +157,11 @@ export class WebService {
 			//Assuminging that ID is always the 2n-th item
 			let lastIndex = (Math.floor(_path.length / 2) * 2) - 1;
 			let idPaths = [];
-			
+
 			for (let i = 1; i <= lastIndex; i += 2){
 				idPaths.push(_path[i]);
 			};
-			
+
 			if (idPaths.length > 0){
 				return idPaths;
 			} else {
@@ -185,7 +185,7 @@ export class WebService {
 			if (_pagination['current_page']){//Pages start at one, rest of values are falsy
 				pObj['page'] = _pagination['current_page'];
 			}
-			
+
 			return pObj;
 		};
 		/*this.setSessionPageName = function(sessionPageName){
@@ -193,12 +193,12 @@ export class WebService {
 		};*/
 		this.canNextPage = function(currentPage, amount){
 			if (!this.hasResults || _hasError){return false};
-			
+
 			currentPage = (typeof currentPage === "undefined") ? _pagination['current_page'] : currentPage;
 			amount = (typeof amount === "undefined") ? 1 : amount;
-			
+
 			//console.log([currentPage,amount,_pagination.last_page])
-			
+
 			if (currentPage + amount <= _pagination['last_page']){
 				return currentPage + amount;
 			} else {
@@ -207,10 +207,10 @@ export class WebService {
 		};
 		this.canPreviousPage = function(currentPage, amount){
 			if (!this.hasResults || _hasError){return false};
-			
+
 			currentPage = (typeof currentPage === "undefined") ? _pagination['current_page'] : currentPage;
 			amount = (typeof amount === "undefined") ? 1 : amount;
-			
+
 			if (currentPage - amount >= 1){
 				return currentPage - amount;
 			} else {
@@ -219,16 +219,16 @@ export class WebService {
 		};
 		this.setPages = function (pageDistance){//pageDistance as n, is n+1+n of max pages
 			if (!this.hasResults || _hasError){return false};
-			
+
 			let pageList = [];
 			pageDistance = (typeof pageDistance === "undefined") ? 3 : pageDistance;
 			let currentPage = _pagination['current_page'];
 			let lastPage = _pagination['last_page']
-			
+
 			//Ensure using valid page - TODO check if no results can pass other validation
 			currentPage = (currentPage <= lastPage) ? currentPage : lastPage;
 			currentPage = (currentPage >= 1) ? currentPage : 1;
-			
+
 			if (lastPage == (currentPage == 1)){
 				this.navPages = [{
 					'pageText': 'All displayed',
@@ -242,10 +242,10 @@ export class WebService {
 				}];
 				return;
 			}
-			
+
 			let pagStart = this.canPreviousPage(currentPage, pageDistance);
 			let pagEnd = this.canNextPage(currentPage, pageDistance);
-			
+
 			if (pagStart != currentPage){
 				pageList.push({
 					'pageText': '<<',
@@ -303,21 +303,21 @@ export class WebService {
 					'isLast': true,
 				});
 			}
-			
+
 			this.navPages = pageList;
 			//_private_pages = pageList;
 		}
-		
-		
+
+
 		this.updateLocations = function(objWithLocations, isTerain){
 			if (!this.hasResults || _hasError){return false};
-			
+
 			objWithLocations = (typeof objWithLocations === "undefined") ? _private_list : objWithLocations;
 
 			for (let item of objWithLocations){
 				let search_term = '';
 				if (item['business_latitude'] && item['business_longitude']){
-					search_term = item['search_term'] = item['business_latitude']+', '+item['business_longitude']; 
+					search_term = item['search_term'] = item['business_latitude']+', '+item['business_longitude'];
 				} else if (item['business_address'] && item['business_city'] && item['business_postal_code']) {
 					search_term = item['business_address']+', '+item['business_city']+', '+item['business_postal_code'];
 				}
@@ -331,53 +331,44 @@ export class WebService {
 			}
 			//console.log(objWithLocations)
 		}
-		
-		
+
+
 		this.setPostForm = function(componentRef, postFields){
-			if (!this.hasResults || _hasError){
-				console.log(['setPostForm had error',componentRef])
-				/*console.log(['setPostForm had error',componentRef['formBuilder'], componentRef['formBuilder']['group'], componentRef['formBuilder']['group']({})]);
-				console.log(['setPostForm had error',componentRef['formBuilder']['group'], componentRef['formBuilder']['group']({})]);
-				console.log(['setPostForm had error',componentRef['formBuilder']['group']({})]);*/
-
-				
-				return false};
-
 			console.log(['componentRef, postFields',componentRef, postFields])
 			_post_fields = postFields;
-			
+
 			let group = {}
-			
+
 			for (let p_f of postFields){
 				group[p_f['fieldnameForm']] = (p_f.hasValidation) ? [p_f['defaultVal'], Validators.required] : p_f.defaultVal;
 			}
-			
+
 			console.log('componentRef',componentRef,componentRef['formBuilder'])
 			console.log('_web_service',_web_service,_web_service['formBuilder'])
-			
+
 			_post_form = componentRef['formBuilder']['group'](group);
-			
+
 			return _post_form;
 		};
 		this.onSubmit = function(){
 			if (!this.hasResults || _hasError || !_post_form){return false};
 
 			//Should be polymorphic - any form on any page,
-			let formData = _post_form;		
-			
+			let formData = _post_form;
+
 			let params = {
 				'formValue': formData['value'],
 				'reqFields': _post_fields,
 				'sHID': _name,
 			};
-			
+
 			console.log(['this.onSubmit',params,formData,formData['value'],_post_fields,_name])
 
-			
+
 			this.postForm();
-			
+
 			//this.webService.postForm(params);//How to access service helper - do I have access?, Just to be safe include
-			
+
 			formData['reset']();
 		};
 		this.postForm = function(){
@@ -387,7 +378,7 @@ export class WebService {
 			for (let r_f of _post_fields){
 				postData.append(r_f.fieldnameAPI, _post_form['value'][r_f.fieldnameForm])
 			};
-			
+
 			//console.log(['this.postForm',postData,this.url,_get,_web_service,this.paramObj()])
 			console.log(['values SH post', postData,_post_form,this.fullPath(),_post_fields,_get,_self])
 			_http.post(//Don't think this. is defined as expected - it's the bottleneck
@@ -396,11 +387,10 @@ export class WebService {
 				response => {
 					_get.call(_web_service, this.paramObj())
 				}
-			);	
+			);
 		};
-		
+
 		this.isInvalid = function(control){
-			return true
 			return !_post_form['controls'][control] || _post_form['controls'][control]['invalid'] && _post_form['controls'][control]['touched'];
 		}
 		this.isUntouched = function(){
@@ -417,28 +407,28 @@ export class WebService {
 			for (let p_f of _post_fields){
 				if (p_f['hasValidation']){
 					incomplete = incomplete || this.isInvalid(p_f.fieldnameForm);
-				} 
+				}
 			}
 			incomplete = incomplete || this.isUntouched();
 			return incomplete;
 		}
 	};
-	
-	
+
+
 	getCodes(params){
 		let page = params['page'];
 		this['c'] = this.serviceStrut['c'];
 		let helper = this['c'];
-		
+
 		if (params.snapshot){
 			helper.setPath(["codes", params['snapshot']['url'][1]['path']]);
 		}
-		
+
 		//let sessionPageName = params.sessionPageName;
-		
+
 		console.log(helper.fullPath() + '?pn=' + page)
 		return this.http.get(
-			helper['fullPath']() 
+			helper['fullPath']()
 			+ '?pn=' + page
 		).subscribe(
 			response => {
@@ -452,17 +442,17 @@ export class WebService {
 			}//,() => {onCompleted callback}
 		);
 	}
-	
+
 	getBusinesses(params){
 		let page = params['page'];
 		this['b'] = this.serviceStrut['b'];
 		let helper = this['b'];
 		helper.setPath(["businesses"]);
-		
+
 		//let sessionPageName = params.sessionPageName;
-		
+
 		return this.http.get(
-			helper['fullPath']() 
+			helper['fullPath']()
 			+ '?pn=' + page
 		).subscribe(
 			response => {
@@ -483,9 +473,9 @@ export class WebService {
 		this['b_id'] = this.serviceStrut['b_id'];
 		let helper = this['b_id'];
 		helper.setPath(["businesses",b_id]);
-		
-		console.log(['return this.http.get', helper['fullPath'](), this.http.get(helper['fullPath']())])
-		
+
+		console.log(['return this.http.get', this.http.get(helper.fullPath())])
+
 		return this.http.get(
 			helper['fullPath']()
 		).subscribe(
@@ -504,16 +494,16 @@ export class WebService {
 		let page = params['page'];
 		//let b_id = params.b_id;
 		let sessionPageName = params['sessionPageName'];
-		
+
 		if (params['self']){
 			this['r'] = params['self'];
 		} else {
 			this['r'] = this.serviceStrut['r'];
 		}
 		let helper = this['r'];
-		
+
 		helper.setPath(this['b_id'].path().concat(["reviews"]));
-		
+
 		return this.http.get(
 			helper.fullPath()
 			+ '?pn=' + page
@@ -532,16 +522,16 @@ export class WebService {
 	getInspections(params){
 		console.log(['getInspections(params)',params])
 		let page = params['page'];
-		
+
 		if (params['self']){
 			this['i'] = params['self'];
 		} else {
 			this['i'] = this.serviceStrut['i'];
 		}
 		let helper = this['i'];
-		
+
 		helper.setPath(this['b_id'].path().concat(["inspections"]));
-		
+
 		return this.http.get(
 			helper.fullPath()
 			+ '?pn=' + page
@@ -565,15 +555,15 @@ export class WebService {
 			this['i_id'] = this.serviceStrut['i_id'];
 		}
 		let helper = this['i_id'];
-		
+
 		let pathSnapshot = [];
 		for (let url of snapshot['url']){
 			pathSnapshot.push(url['path']);
 		}
 		console.log(pathSnapshot)
-		
+
 		helper.setPath(pathSnapshot); //An ID should be passed
-		
+
 		return this.http.get(
 			helper.fullPath()
 			+ '?pn=' + page
@@ -586,21 +576,21 @@ export class WebService {
 				helper.setError(error);
 			}
 		);
-		
+
 	}
 	getViolations(params){
 		console.log(['getViolations(params)',params])
 		let page = params['page'];
-		
+
 		if (params['self']){
 			this['v'] = params['self'];
 		} else {
 			this['v'] = this.serviceStrut['v'];
 		}
 		let helper = this['v'];
-		
+
 		helper.setPath(this['i_id'].path().concat(["violations"]));
-		
+
 		return this.http.get(
 			helper.fullPath()
 			+ '?pn=' + page
@@ -616,7 +606,7 @@ export class WebService {
 	}
 	getReview(){}
 	getViolation(){}
-	
+
 	vote(votingURL){
 		console.log(votingURL)
 		this.http.get(
@@ -627,25 +617,25 @@ export class WebService {
 			}
 		);
 	}
-	
-	
-	
+
+
+
 	/*functionsBySHID={'b':this.getBusinesses,'b_id':this.getBusiness,'r':this.getReviews,'r_id':this.getReview,'i':this.getInspections,'i_id':this.getInspection,'v':this.getViolations,'v_id':this.getViolation}
-	
+
 	postForm(params){
 		console.log(['postForm(params)', params])
 		let formValue = params.formValue;
 		let reqFields = params.reqFields;
 		let callbackFun = this.functionsBySHID[params.sHID];
 		let serviceHelper = this.serviceStrut[params.sHID];
-		
+
 		let postData = new FormData();
-		
+
 		for (let r_f of reqFields){
 			postData.append(r_f.fieldnameAPI, formValue[r_f.fieldnameForm])
 		};
-		
-		
+
+
 		console.log(['values before post', postData,formValue,serviceHelper.fullPath(),reqFields,callbackFun,serviceHelper])
 		this.http.post(
 			serviceHelper.fullPath(), postData
@@ -654,21 +644,21 @@ export class WebService {
 				callbackFun.call(this, serviceHelper.paramObj());
 			}
 		);
-		
-		
+
+
 	};*/
-	
+
 	/*postReview(params) {
 		let review = params.review;
 		//Assume that this.r has already been created - might need a check to ensure
 		let postData = new FormData();
-		
+
 		req_fields = [ "username", "stars", "text"]
-		
+
 		for (r_f of req_fields){
 			postData.append(r_f, review[r_f]);
 		}
-		
+
 		this.http.post(
 			this.r.fullPath(), postData
 		).subscribe(

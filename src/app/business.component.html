@@ -1,9 +1,9 @@
 <!--h1>Biz Directory</h1>
 
 <h2>There are {{ business_list.length }} businesses in the directory</h2>
- 
+
  <h2>The first business is {{ business_list[0].name }}</h2>
- 
+
  <div *ngFor="let business of business_list">
 	 <p>Name: {{ business.name }} <br>
 	 City: {{ business.city }} <br>
@@ -20,7 +20,7 @@
 		<div class="col-sm-12">
 			<div *ngFor = "let business of webService.b_id.list | async"><!--C3, from michel email-->
 				<div class="card text-white bg-primary mb-3"
-					
+
 					style="cursor: pointer"><!--[routerLink]="['/businesses', business._id]"-->
 					<div class="card-header">
 						{{ business.business_name }}
@@ -37,7 +37,7 @@
 								<iframe width="100%" height="400" id="gmap_canvas" [src]="sanitizer.bypassSecurityTrustResourceUrl(business.business_location)" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
 							</div>
 							<style>.mapouter{position:relative;text-align:right;height:400px;width:100%;}.gmap_canvas {position:relative;overflow:hidden;background:none!important;height:400px;width:100%;}</style>
-							
+
 						</div>
 					</div>
 					<div class="card-footer">
@@ -64,12 +64,12 @@
 			<div class="card-footer">
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
 				  <label class="btn btn-outline-success"><!--###Add angular class here with 'active' class -->
-					<input type="radio" name="options" id="upVote"  autocomplete="off" checked 
+					<input type="radio" name="options" id="upVote"  autocomplete="off" checked
 					  (click)="webService.vote(webService.r.url + '/'+ review._id + '/vote/up')">
 					    {{ review.votes.up }} 👍
 				  </label>
 				  <label class="btn btn-outline-secondary">
-					<input type="radio" name="options" id="downVote"  autocomplete="off" 
+					<input type="radio" name="options" id="downVote"  autocomplete="off"
 					  (click)="webService.vote(webService.r.url + '/'+ review._id + '/vote/down')">
 					    {{ review.votes.down }} 👎
 				  </label>
@@ -82,7 +82,7 @@
 <nav aria-label="Page navigation example">
   <ul class="pagination justify-content-center">
     <li class="page-item" style="cursor:pointer"
-	  *ngFor = "let pageNav of webService.r.navPages" 
+	  *ngFor = "let pageNav of webService.r.navPages"
 	  [ngClass]="{'active': pageNav.isCurrent, 'text-secondary': !pageNav.isPageObj, 'text-primary': !pageNav.isCurrent && pageNav.isPageObj}">
 		<a class="page-link" (click)="changePage(pageNav)">{{pageNav.pageText}}</a>
 		<!--a class="page-link" (click)="changePage(pageNav)">{{pageNav.pageText}}</a-->
@@ -96,13 +96,17 @@
 		<div class="col-sm-12">
 			<h2>Please review this business</h2>
 			<!----><form [formGroup]="theForm.r" (ngSubmit)="webService.r.onSubmit()">
-				<!--div class="form-group">
+				<div class="form-group">
 					<label for="name">Name</label>
-					<input type="text" id="name" name="name" class="form-control" formControlName="name"[ngClass]="{'error': webService.r.isInvalid('name')}">
+					<input type="text" id="name" name="name" class="form-control" formControlName="name"
+						[ngClass]="{'error': webService.r.isInvalid('name')}"
+					>
 				</div>
 				<div class="form-group">
 					<label for="review">Please leave your review below</label>
-					<textarea id="review" rows="3" name="review" class="form-control" formControlName="review"[ngClass]="{'error': webService.r.isInvalid('review')}"></textarea>
+					<textarea id="review" rows="3" name="review" class="form-control" formControlName="review"
+						[ngClass]="{'error': webService.r.isInvalid('review')}"
+					></textarea>
 				</div>
 				<div class="form-group">
 					<label for="stars">Please provide a rating (5 = best)</label>
@@ -116,7 +120,7 @@
 				</div>
 				<span *ngIf="webService.r.isIncomplete()">You must complete all fields</span>
 				<button *ngIf="!webService.r.isIncomplete()" type="submit" class="btn btn-primary">Submit</button>
-			--></form>
+			</form>
 		</div>
 	</div>
 </div>
