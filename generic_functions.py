@@ -161,7 +161,8 @@ def find_one_document(database_con, id_for_result, sub_doc_path=[], sort=None, p
 # May need to convert to list if a generator like object or cursor
 
 # Public
-def find_all_documents(database_con, super_id_for_results=None, sub_doc_path=[], sort=None, projection=None, match=[], page_index=0, page_size=12, id_name="_id", id_function=ObjectId):
+def find_all_documents(database_con, super_id_for_results=None, sub_doc_path=[], sort=None, projection=None, match=[], page_index=0, page_size=12, id_name="_id", id_function=ObjectId
+                       , final_match=None, distinct=False):
     # super_id_for_results can be none if searching all buisnesses - as it's the root document
   """
 
@@ -185,14 +186,16 @@ def find_all_documents(database_con, super_id_for_results=None, sub_doc_path=[],
                           page_index=page_index,
                           page_size=page_size,
                           id_name=id_name,
-                          id_function=id_function)
+                          id_function=id_function,
+                          final_match=final_match,
+                          distinct=distinct)
 
   return database_con.aggregate(pipe_line)
 
 
 # May need to convert to list if a generator like object or cursor
 
-def create_find(id_for_results=None, return_one=False, sub_doc_path=[], sort_obj=None, projection=None, match=[], page_index=0, page_size=12, id_name="_id", id_function=ObjectId):
+def create_find(id_for_results=None, return_one=False, sub_doc_path=[], sort_obj=None, projection=None, match=[], page_index=0, page_size=12, id_name="_id", id_function=ObjectId, final_match=None, distinct=False):
     # e.g. for violations of specific inspection: create_find('5dee77c28124f41ab81441e8', False, sub_doc_path=["inspections","violations"])
     # e.g. for buisnesses: create_find()
     # e.g. for specific buisness: create_find('5dee77c28124f41ab81441e4', True)
@@ -295,6 +298,9 @@ def create_find(id_for_results=None, return_one=False, sub_doc_path=[], sort_obj
 
   if return_one and len(r_p['r_l_path'].copy()) > 0:
     pipe_line.append({'$match': {id_name: id_function(id_for_results)}})
+
+  if final_match:
+    pipe_line.append({'$match': final_match})
 
   #need to add match here for advanced functionility
 

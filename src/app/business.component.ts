@@ -16,10 +16,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 export class BusinessComponent {
 	private const sHID = 'b_id';
-	
-	theForm;
-	//rForm;
-	
 	private postFields = [{
 			'fieldnameForm': 'name',
 			'fieldnameAPI': 'username',
@@ -38,6 +34,7 @@ export class BusinessComponent {
 		}
 	];
 	
+	theForm = {};
 	sesStoID = this.sHID + '_page';
 	
 	constructor(//C2,6
@@ -50,45 +47,33 @@ export class BusinessComponent {
 	
 	ngOnInit(){
 		this.sesStoID = this.sHID + '_' + this.route.snapshot.params[this.sHID] + '_page';
+		
 		if (sessionStorage[this.sesStoID] && sessionStorage[this.sesStoID] > 0){
 			this.page[this.sesStoID] = sessionStorage[this.sesStoID];
+		} else {//Page needs to be created/chnages to valid val (may be a mistake if there are no reviews)
+			sessionStorage[this.sesStoID] = this.page[this.sesStoID];
 		}
 		
 		this.webService.getBusiness({
+			snapshot: this.route.snapshot,
 			[this.sHID]: this.route.snapshot.params[this.sHID],
 			'map': true
 		});
-		this.webService.getReviews({
+		this.webService.getReviews({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
 			'page': this.page[this.sesStoID],
-			[this.sHID]: this.route.snapshot.params[this.sHID]
+			//'sessionPageName': this.sesStoID,
 		});
+		this.webService.getInspections({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
+			'page': this.page[this.sesStoID],
+			//'sessionPageName': this.sesStoID,
+		});
+		//From this point, the updated sHID:b_id and sHID:r are available
 		
-		this.theForm = this.webService.r.setPostForm(this, this.postFields)
+		//console.log(this.route.snapshot.params[this.sHID] == this.webService.r.lastID())
+
+		
+		this.theForm['r'] = this.webService.r.setPostForm(this, this.postFields)
 	}
-	
-	/*onSubmit(formSHID){
-		let formData = this.rForm; //Really want to this[targetSHID]Form
-		let targetSHID = formSHID;
-		let params = {'formValue': formData.value,'reqFields': this.postFields,'sHID': targetSHID,};
-		his.webService.postForm(params);
-		formData.reset();
-	};
-	isInvalid(control){
-		return this.rForm.controls[control].invalid && this.rForm.controls[control].touched;
-	}
-	isUntouched() {
-		let untouched = false;
-		for (let p_f of this.postFields){if (p_f.hasValidation){untouched = untouched || this.rForm.controls[p_f.fieldnameForm].pristine}}
-		return untouched;
-	}
-	isIncomplete() {
-		let incomplete = false;
-		for (let p_f of this.postFields){if (p_f.hasValidation){incomplete = incomplete || this.isInvalid(p_f.fieldnameForm);} }
-		incomplete = incomplete || this.isUntouched();
-		return incomplete;
-	}
-	*/
-	
 	
 	changePage(aPageNav){
 		let pageN = aPageNav.pageNumber;
@@ -97,7 +82,6 @@ export class BusinessComponent {
 			this.page[this.sesStoID] = pageN;
 			sessionStorage[this.sesStoID] = pageN;
 			this.webService.getReviews({
-				[this.sHID]: this.route.snapshot.params[this.sHID],
 				'page':pageN
 			});
 		}

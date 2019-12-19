@@ -1,0 +1,4729 @@
+{
+	"info": {
+		"_postman_id": "55fcdfe5-db3c-4446-94be-235a9ad9da83",
+		"name": "SanFran",
+		"description": "The Biz collection provides an API through which users can manage amd access a collection of businesses and reviews on the businesses.\r\n\r\nThere are 3 categories of user with permission as follows:\r\n\r\n1: Admin users – ability to access all endpoints and perform all operations.\r\n\r\n2: Registered users – can retrieve and edit data but not delete\r\n\r\n3: Non-registered users – can retrieve data but not permitted to access any endpoints that cause the collection to be modified\r\n",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Non-auth user",
+			"item": [
+				{
+					"name": "Non-auth fetch all business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has content\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has id\", function () {",
+									"    pm.response.to.have.jsonBody(\"[0]._id\")",
+									"});",
+									"",
+									"//response = pm.response.json();",
+									"//pm.globals.set(\"b_id\", response[0]['_id']);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses?pn={{pn}}&ps={{ps}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses"
+							],
+							"query": [
+								{
+									"key": "pn",
+									"value": "{{pn}}"
+								},
+								{
+									"key": "ps",
+									"value": "{{ps}}"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This endpoint allows anyone to retrieve via GET all businesses as a JSON list. By default, it returns the first 10, but the amount (ps) and page number (pn) can be specified as a parameter.\r\nIn this test case we are ensuring that an un-auth user can retrieve all businesses; a list of businesses is expected."
+					},
+					"response": [
+						{
+							"name": "Non-auth fetch all business",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "{{jwt_token}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Test Biz",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "town",
+											"value": "Belfast",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "rating",
+											"value": "3",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses?pn=0&ps=12",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses"
+									],
+									"query": [
+										{
+											"key": "pn",
+											"value": "0"
+										},
+										{
+											"key": "ps",
+											"value": "12"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Non-auth fetch business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has content\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has id\", function () {",
+									"    pm.response.to.have.jsonBody(\"[0]._id\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}?pn={{pn}}&ps={{ps}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses",
+								"{{b_id}}"
+							],
+							"query": [
+								{
+									"key": "pn",
+									"value": "{{pn}}"
+								},
+								{
+									"key": "ps",
+									"value": "{{ps}}"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This endpoint allows anyone to retrieve via GET all businesses as a JSON list. By default, it returns the first 10, but the amount (ps) and page number (pn) can be specified as a parameter.\r\nIn this test case we are ensuring that an un-auth user can retrieve all businesses; a list of businesses is expected."
+					},
+					"response": [
+						{
+							"name": "Non-auth fetch business",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "{{jwt_token}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}?pn={{pn}}&ps={{ps}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"{{b_id}}"
+									],
+									"query": [
+										{
+											"key": "pn",
+											"value": "{{pn}}"
+										},
+										{
+											"key": "ps",
+											"value": "{{ps}}"
+										},
+										{
+											"key": "",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "5034"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.4"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Dec 2019 12:33:11 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"_id\": \"5dee77c28124f41ab81441fe\",\n        \"business_account_number\": 1020598,\n        \"business_address\": \"552 Jones St\",\n        \"business_city\": \"San Francisco\",\n        \"business_id\": 85987,\n        \"business_latitude\": \"37.786383\",\n        \"business_location\": \"POINT (-122.413097 37.786383)\",\n        \"business_longitude\": \"-122.413097\",\n        \"business_name\": \"Tselogs\",\n        \"business_phone_number\": \"\",\n        \"business_postal_code\": 94102,\n        \"business_start_date\": \"2015/11/06 00:00:00\",\n        \"business_state\": \"CA\",\n        \"inspection_count\": 2,\n        \"inspections\": [\n            {\n                \"_id\": \"5dee77c28124f41ab81441ff\",\n                \"inspection_date\": \"2018/04/12 00:00:00\",\n                \"inspection_id\": \"85987_20180412\",\n                \"inspection_score\": 94,\n                \"inspection_type\": \"Routine - Unscheduled\",\n                \"violation_count\": 2,\n                \"violations\": [\n                    {\n                        \"_id\": \"5dee77c28124f41ab8144200\",\n                        \"risk_category\": \"Moderate Risk\",\n                        \"violation_description\": \"Improper thawing methods\",\n                        \"violation_id\": \"85987_20180412_103132\"\n                    },\n                    {\n                        \"_id\": \"5dee77c28124f41ab8144201\",\n                        \"risk_category\": \"Low Risk\",\n                        \"violation_description\": \"Unclean or degraded floors walls or ceilings\",\n                        \"violation_id\": \"85987_20180412_103154\"\n                    }\n                ]\n            },\n            {\n                \"_id\": \"5dee77c28124f41ab8144202\",\n                \"inspection_date\": \"2017/03/02 00:00:00\",\n                \"inspection_id\": \"85987_20170302\",\n                \"inspection_score\": 96,\n                \"inspection_type\": \"Routine - Unscheduled\",\n                \"violation_count\": 2,\n                \"violations\": [\n                    {\n                        \"_id\": \"5dee77c28124f41ab8144203\",\n                        \"risk_category\": \"Low Risk\",\n                        \"violation_description\": \"Inadequate ventilation or lighting\",\n                        \"violation_id\": \"85987_20170302_103147\"\n                    },\n                    {\n                        \"_id\": \"5dee77c28124f41ab8144204\",\n                        \"risk_category\": \"Low Risk\",\n                        \"violation_description\": \"Unclean or degraded floors walls or ceilings\",\n                        \"violation_id\": \"85987_20170302_103154\"\n                    }\n                ]\n            }\n        ],\n        \"mail_address\": \"11 San Pedro Rd # B\",\n        \"mail_city\": \"Colma\",\n        \"mail_state\": \"CA\",\n        \"mail_zipcode\": 94014,\n        \"naics_code_description\": \"Food Services\",\n        \"ownership_name\": \"Tselogs Corporation\",\n        \"review_count\": 10,\n        \"reviews\": [\n            {\n                \"_id\": \"5df28e397df51cfe52f888f8\",\n                \"date\": \"2018/04/05 00:00:00\",\n                \"stars\": 5,\n                \"text\": \"Great food and staff\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888f9\",\n                \"date\": \"2018/04/05 00:00:00\",\n                \"stars\": 3,\n                \"text\": \"Misleading prices\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888fa\",\n                \"date\": \"2018/04/05 00:00:00\",\n                \"stars\": 2,\n                \"text\": \"Ripped off\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888fb\",\n                \"date\": \"2018/04/05 00:00:00\",\n                \"stars\": 4,\n                \"text\": \"Unexpected lovely dinner\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888fc\",\n                \"date\": \"2018/04/05 00:00:00\",\n                \"stars\": 3,\n                \"text\": \"Great view but horrible food\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888fd\",\n                \"date\": \"2017/02/23 00:00:00\",\n                \"stars\": 4,\n                \"text\": \"A treat!\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888fe\",\n                \"date\": \"2017/02/23 00:00:00\",\n                \"stars\": 5,\n                \"text\": \"Lovely dinner in a cozy lovely space\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888ff\",\n                \"date\": \"2017/02/23 00:00:00\",\n                \"stars\": 4,\n                \"text\": \"A treat!\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f88900\",\n                \"date\": \"2017/02/23 00:00:00\",\n                \"stars\": 2,\n                \"text\": \"Ripped off\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f88901\",\n                \"date\": \"2017/02/23 00:00:00\",\n                \"stars\": 4,\n                \"text\": \"Excellent service\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            }\n        ],\n        \"supervisor_district\": 9\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Non-auth fetch all reviews",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has content\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has id\", function () {",
+									"    pm.response.to.have.jsonBody(\"[0]._id\")",
+									"});",
+									"",
+									"//response = pm.response.json();",
+									"//pm.globals.set(\"r_id\", response[0]['_id']);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}/reviews?pn={{pn}}&ps={{ps}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses",
+								"{{b_id}}",
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "pn",
+									"value": "{{pn}}"
+								},
+								{
+									"key": "ps",
+									"value": "{{ps}}"
+								}
+							]
+						},
+						"description": "This endpoint allows anyone to retrieve via GET all businesses as a JSON list. By default, it returns the first 10, but the amount (ps) and page number (pn) can be specified as a parameter.\r\nIn this test case we are ensuring that an un-auth user can retrieve all businesses; a list of businesses is expected."
+					},
+					"response": [
+						{
+							"name": "Non-auth fetch all reviews",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "{{jwt_token}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}?pn={{pn}}&ps={{ps}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"{{b_id}}"
+									],
+									"query": [
+										{
+											"key": "pn",
+											"value": "{{pn}}"
+										},
+										{
+											"key": "ps",
+											"value": "{{ps}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "5034"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.4"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Dec 2019 12:25:18 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"_id\": \"5dee77c28124f41ab81441fe\",\n        \"business_account_number\": 1020598,\n        \"business_address\": \"552 Jones St\",\n        \"business_city\": \"San Francisco\",\n        \"business_id\": 85987,\n        \"business_latitude\": \"37.786383\",\n        \"business_location\": \"POINT (-122.413097 37.786383)\",\n        \"business_longitude\": \"-122.413097\",\n        \"business_name\": \"Tselogs\",\n        \"business_phone_number\": \"\",\n        \"business_postal_code\": 94102,\n        \"business_start_date\": \"2015/11/06 00:00:00\",\n        \"business_state\": \"CA\",\n        \"inspection_count\": 2,\n        \"inspections\": [\n            {\n                \"_id\": \"5dee77c28124f41ab81441ff\",\n                \"inspection_date\": \"2018/04/12 00:00:00\",\n                \"inspection_id\": \"85987_20180412\",\n                \"inspection_score\": 94,\n                \"inspection_type\": \"Routine - Unscheduled\",\n                \"violation_count\": 2,\n                \"violations\": [\n                    {\n                        \"_id\": \"5dee77c28124f41ab8144200\",\n                        \"risk_category\": \"Moderate Risk\",\n                        \"violation_description\": \"Improper thawing methods\",\n                        \"violation_id\": \"85987_20180412_103132\"\n                    },\n                    {\n                        \"_id\": \"5dee77c28124f41ab8144201\",\n                        \"risk_category\": \"Low Risk\",\n                        \"violation_description\": \"Unclean or degraded floors walls or ceilings\",\n                        \"violation_id\": \"85987_20180412_103154\"\n                    }\n                ]\n            },\n            {\n                \"_id\": \"5dee77c28124f41ab8144202\",\n                \"inspection_date\": \"2017/03/02 00:00:00\",\n                \"inspection_id\": \"85987_20170302\",\n                \"inspection_score\": 96,\n                \"inspection_type\": \"Routine - Unscheduled\",\n                \"violation_count\": 2,\n                \"violations\": [\n                    {\n                        \"_id\": \"5dee77c28124f41ab8144203\",\n                        \"risk_category\": \"Low Risk\",\n                        \"violation_description\": \"Inadequate ventilation or lighting\",\n                        \"violation_id\": \"85987_20170302_103147\"\n                    },\n                    {\n                        \"_id\": \"5dee77c28124f41ab8144204\",\n                        \"risk_category\": \"Low Risk\",\n                        \"violation_description\": \"Unclean or degraded floors walls or ceilings\",\n                        \"violation_id\": \"85987_20170302_103154\"\n                    }\n                ]\n            }\n        ],\n        \"mail_address\": \"11 San Pedro Rd # B\",\n        \"mail_city\": \"Colma\",\n        \"mail_state\": \"CA\",\n        \"mail_zipcode\": 94014,\n        \"naics_code_description\": \"Food Services\",\n        \"ownership_name\": \"Tselogs Corporation\",\n        \"review_count\": 10,\n        \"reviews\": [\n            {\n                \"_id\": \"5df28e397df51cfe52f888f8\",\n                \"date\": \"2018/04/05 00:00:00\",\n                \"stars\": 5,\n                \"text\": \"Great food and staff\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888f9\",\n                \"date\": \"2018/04/05 00:00:00\",\n                \"stars\": 3,\n                \"text\": \"Misleading prices\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888fa\",\n                \"date\": \"2018/04/05 00:00:00\",\n                \"stars\": 2,\n                \"text\": \"Ripped off\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888fb\",\n                \"date\": \"2018/04/05 00:00:00\",\n                \"stars\": 4,\n                \"text\": \"Unexpected lovely dinner\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888fc\",\n                \"date\": \"2018/04/05 00:00:00\",\n                \"stars\": 3,\n                \"text\": \"Great view but horrible food\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888fd\",\n                \"date\": \"2017/02/23 00:00:00\",\n                \"stars\": 4,\n                \"text\": \"A treat!\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888fe\",\n                \"date\": \"2017/02/23 00:00:00\",\n                \"stars\": 5,\n                \"text\": \"Lovely dinner in a cozy lovely space\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f888ff\",\n                \"date\": \"2017/02/23 00:00:00\",\n                \"stars\": 4,\n                \"text\": \"A treat!\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f88900\",\n                \"date\": \"2017/02/23 00:00:00\",\n                \"stars\": 2,\n                \"text\": \"Ripped off\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            },\n            {\n                \"_id\": \"5df28e397df51cfe52f88901\",\n                \"date\": \"2017/02/23 00:00:00\",\n                \"stars\": 4,\n                \"text\": \"Excellent service\",\n                \"username\": \"\",\n                \"votes\": {\n                    \"down\": 0,\n                    \"up\": 0\n                }\n            }\n        ],\n        \"supervisor_district\": 9\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Non-auth fetch review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has content\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has id\", function () {",
+									"    pm.response.to.have.jsonBody(\"[0]._id\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}/reviews/{{r_id}}?pn={{pn}}&ps={{ps}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses",
+								"{{b_id}}",
+								"reviews",
+								"{{r_id}}"
+							],
+							"query": [
+								{
+									"key": "pn",
+									"value": "{{pn}}"
+								},
+								{
+									"key": "ps",
+									"value": "{{ps}}"
+								}
+							]
+						},
+						"description": "This endpoint allows anyone to retrieve via GET all businesses as a JSON list. By default, it returns the first 10, but the amount (ps) and page number (pn) can be specified as a parameter.\r\nIn this test case we are ensuring that an un-auth user can retrieve all businesses; a list of businesses is expected."
+					},
+					"response": [
+						{
+							"name": "Non-auth fetch review",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "{{jwt_token}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}/reviews/{{r_id}}?pn={{pn}}&ps={{ps}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"{{b_id}}",
+										"reviews",
+										"{{r_id}}"
+									],
+									"query": [
+										{
+											"key": "pn",
+											"value": "{{pn}}"
+										},
+										{
+											"key": "ps",
+											"value": "{{ps}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "216"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.4"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Dec 2019 12:35:22 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"_id\": \"5df28e397df51cfe52f888f8\",\n        \"date\": \"2018/04/05 00:00:00\",\n        \"stars\": 5,\n        \"text\": \"Great food and staff\",\n        \"username\": \"\",\n        \"votes\": {\n            \"down\": 0,\n            \"up\": 0\n        }\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Non-auth fetch all inspections",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has content\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has id\", function () {",
+									"    pm.response.to.have.jsonBody(\"[0]._id\")",
+									"});",
+									"",
+									"//response = pm.response.json();",
+									"//pm.globals.set(\"i_id\", response[0]['_id']);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}/inspections?pn={{pn}}&ps={{ps}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses",
+								"{{b_id}}",
+								"inspections"
+							],
+							"query": [
+								{
+									"key": "pn",
+									"value": "{{pn}}"
+								},
+								{
+									"key": "ps",
+									"value": "{{ps}}"
+								}
+							]
+						},
+						"description": "This endpoint allows anyone to retrieve via GET all businesses as a JSON list. By default, it returns the first 10, but the amount (ps) and page number (pn) can be specified as a parameter.\r\nIn this test case we are ensuring that an un-auth user can retrieve all businesses; a list of businesses is expected."
+					},
+					"response": [
+						{
+							"name": "Non-auth fetch all inspections",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "{{jwt_token}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}/inspections?pn={{pn}}&ps={{ps}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"{{b_id}}",
+										"inspections"
+									],
+									"query": [
+										{
+											"key": "pn",
+											"value": "{{pn}}"
+										},
+										{
+											"key": "ps",
+											"value": "{{ps}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1429"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.4"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Dec 2019 12:29:10 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"_id\": \"5dee77c28124f41ab81441ff\",\n        \"inspection_date\": \"2018/04/12 00:00:00\",\n        \"inspection_id\": \"85987_20180412\",\n        \"inspection_score\": 94,\n        \"inspection_type\": \"Routine - Unscheduled\",\n        \"violation_count\": 2,\n        \"violations\": [\n            {\n                \"_id\": \"5dee77c28124f41ab8144200\",\n                \"risk_category\": \"Moderate Risk\",\n                \"violation_description\": \"Improper thawing methods\",\n                \"violation_id\": \"85987_20180412_103132\"\n            },\n            {\n                \"_id\": \"5dee77c28124f41ab8144201\",\n                \"risk_category\": \"Low Risk\",\n                \"violation_description\": \"Unclean or degraded floors walls or ceilings\",\n                \"violation_id\": \"85987_20180412_103154\"\n            }\n        ]\n    },\n    {\n        \"_id\": \"5dee77c28124f41ab8144202\",\n        \"inspection_date\": \"2017/03/02 00:00:00\",\n        \"inspection_id\": \"85987_20170302\",\n        \"inspection_score\": 96,\n        \"inspection_type\": \"Routine - Unscheduled\",\n        \"violation_count\": 2,\n        \"violations\": [\n            {\n                \"_id\": \"5dee77c28124f41ab8144203\",\n                \"risk_category\": \"Low Risk\",\n                \"violation_description\": \"Inadequate ventilation or lighting\",\n                \"violation_id\": \"85987_20170302_103147\"\n            },\n            {\n                \"_id\": \"5dee77c28124f41ab8144204\",\n                \"risk_category\": \"Low Risk\",\n                \"violation_description\": \"Unclean or degraded floors walls or ceilings\",\n                \"violation_id\": \"85987_20170302_103154\"\n            }\n        ]\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Non-auth fetch inspection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has content\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has id\", function () {",
+									"    pm.response.to.have.jsonBody(\"[0]._id\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}/inspections?pn={{pn}}&ps={{ps}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses",
+								"{{b_id}}",
+								"inspections"
+							],
+							"query": [
+								{
+									"key": "pn",
+									"value": "{{pn}}"
+								},
+								{
+									"key": "ps",
+									"value": "{{ps}}"
+								}
+							]
+						},
+						"description": "This endpoint allows anyone to retrieve via GET all businesses as a JSON list. By default, it returns the first 10, but the amount (ps) and page number (pn) can be specified as a parameter.\r\nIn this test case we are ensuring that an un-auth user can retrieve all businesses; a list of businesses is expected."
+					},
+					"response": [
+						{
+							"name": "Non-auth fetch inspection",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "{{jwt_token}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}/inspections?pn={{pn}}&ps={{ps}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"{{b_id}}",
+										"inspections"
+									],
+									"query": [
+										{
+											"key": "pn",
+											"value": "{{pn}}"
+										},
+										{
+											"key": "ps",
+											"value": "{{ps}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1429"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.4"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Dec 2019 12:38:56 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"_id\": \"5dee77c28124f41ab81441ff\",\n        \"inspection_date\": \"2018/04/12 00:00:00\",\n        \"inspection_id\": \"85987_20180412\",\n        \"inspection_score\": 94,\n        \"inspection_type\": \"Routine - Unscheduled\",\n        \"violation_count\": 2,\n        \"violations\": [\n            {\n                \"_id\": \"5dee77c28124f41ab8144200\",\n                \"risk_category\": \"Moderate Risk\",\n                \"violation_description\": \"Improper thawing methods\",\n                \"violation_id\": \"85987_20180412_103132\"\n            },\n            {\n                \"_id\": \"5dee77c28124f41ab8144201\",\n                \"risk_category\": \"Low Risk\",\n                \"violation_description\": \"Unclean or degraded floors walls or ceilings\",\n                \"violation_id\": \"85987_20180412_103154\"\n            }\n        ]\n    },\n    {\n        \"_id\": \"5dee77c28124f41ab8144202\",\n        \"inspection_date\": \"2017/03/02 00:00:00\",\n        \"inspection_id\": \"85987_20170302\",\n        \"inspection_score\": 96,\n        \"inspection_type\": \"Routine - Unscheduled\",\n        \"violation_count\": 2,\n        \"violations\": [\n            {\n                \"_id\": \"5dee77c28124f41ab8144203\",\n                \"risk_category\": \"Low Risk\",\n                \"violation_description\": \"Inadequate ventilation or lighting\",\n                \"violation_id\": \"85987_20170302_103147\"\n            },\n            {\n                \"_id\": \"5dee77c28124f41ab8144204\",\n                \"risk_category\": \"Low Risk\",\n                \"violation_description\": \"Unclean or degraded floors walls or ceilings\",\n                \"violation_id\": \"85987_20170302_103154\"\n            }\n        ]\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Non-auth fetch all violations",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has content\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has id\", function () {",
+									"    pm.response.to.have.jsonBody(\"[0]._id\")",
+									"});",
+									"",
+									"//response = pm.response.json();",
+									"//pm.globals.set(\"v_id\", response[0]['_id']);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}/inspections/{{i_id}}/violations?pn={{pn}}&ps={{ps}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses",
+								"{{b_id}}",
+								"inspections",
+								"{{i_id}}",
+								"violations"
+							],
+							"query": [
+								{
+									"key": "pn",
+									"value": "{{pn}}"
+								},
+								{
+									"key": "ps",
+									"value": "{{ps}}"
+								}
+							]
+						},
+						"description": "This endpoint allows anyone to retrieve via GET all businesses as a JSON list. By default, it returns the first 10, but the amount (ps) and page number (pn) can be specified as a parameter.\r\nIn this test case we are ensuring that an un-auth user can retrieve all businesses; a list of businesses is expected."
+					},
+					"response": [
+						{
+							"name": "Non-auth fetch all violations",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "{{jwt_token}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}/inspections/{{i_id}}/violations?pn={{pn}}&ps={{ps}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"{{b_id}}",
+										"inspections",
+										"{{i_id}}",
+										"violations"
+									],
+									"query": [
+										{
+											"key": "pn",
+											"value": "{{pn}}"
+										},
+										{
+											"key": "ps",
+											"value": "{{ps}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "399"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.4"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Dec 2019 12:30:40 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"_id\": \"5dee77c28124f41ab8144200\",\n        \"risk_category\": \"Moderate Risk\",\n        \"violation_description\": \"Improper thawing methods\",\n        \"violation_id\": \"85987_20180412_103132\"\n    },\n    {\n        \"_id\": \"5dee77c28124f41ab8144201\",\n        \"risk_category\": \"Low Risk\",\n        \"violation_description\": \"Unclean or degraded floors walls or ceilings\",\n        \"violation_id\": \"85987_20180412_103154\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Non-auth fetch violation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has content\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has id\", function () {",
+									"    pm.response.to.have.jsonBody(\"[0]._id\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}/inspections/{{i_id}}/violations/{{v_id}}?pn={{pn}}&ps={{ps}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses",
+								"{{b_id}}",
+								"inspections",
+								"{{i_id}}",
+								"violations",
+								"{{v_id}}"
+							],
+							"query": [
+								{
+									"key": "pn",
+									"value": "{{pn}}"
+								},
+								{
+									"key": "ps",
+									"value": "{{ps}}"
+								}
+							]
+						},
+						"description": "This endpoint allows anyone to retrieve via GET all businesses as a JSON list. By default, it returns the first 10, but the amount (ps) and page number (pn) can be specified as a parameter.\r\nIn this test case we are ensuring that an un-auth user can retrieve all businesses; a list of businesses is expected."
+					},
+					"response": [
+						{
+							"name": "Non-auth fetch violation",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "{{jwt_token}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/{{b_id}}/inspections/{{i_id}}/violations/{{v_id}}?pn={{pn}}&ps={{ps}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"{{b_id}}",
+										"inspections",
+										"{{i_id}}",
+										"violations",
+										"{{v_id}}"
+									],
+									"query": [
+										{
+											"key": "pn",
+											"value": "{{pn}}"
+										},
+										{
+											"key": "ps",
+											"value": "{{ps}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "193"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.4"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Dec 2019 13:27:27 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"_id\": \"5dee77c28124f41ab8144200\",\n        \"risk_category\": \"Moderate Risk\",\n        \"violation_description\": \"Improper thawing methods\",\n        \"violation_id\": \"85987_20180412_103132\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Non-auth new business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "{{jwt_token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Test Biz",
+									"type": "text"
+								},
+								{
+									"key": "town",
+									"value": "Belfast",
+									"type": "text"
+								},
+								{
+									"key": "rating",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses"
+							]
+						},
+						"description": "This endpoint allows authorised users to add a new business so long as their jwt_token is valid and they have provided [name, town, rating] as content in the POST request.\r\nIn this test case we are ensuring that an un-auth user cannot add a business; we expect an error message.\r\n"
+					},
+					"response": [
+						{
+							"name": "Non-auth new business",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
+									},
+									{
+										"key": "x-access-token",
+										"value": "{{jwt_token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Test Biz",
+											"type": "text"
+										},
+										{
+											"key": "town",
+											"value": "Belfast",
+											"type": "text"
+										},
+										{
+											"key": "rating",
+											"value": "3",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Non-auth logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "313b235e-c0dc-47d4-9926-35b51a8b51ca",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Message is as expected\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Token is missing\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"logout"
+							]
+						},
+						"description": "This endpoint allows auth-users to logout by adding their jwt_token to a blacklist of tokens.\r\nIn this test case we are ensuring that logging out without logging in does nothing; we expect an error message.\r\n"
+					},
+					"response": [
+						{
+							"name": "Non-auth logout",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "{{jwt_token}}",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/logout",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"logout"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0d071677-c688-4126-b187-ea6874954ac8",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2e440674-7f91-4988-8457-d67f529e8771",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Auth user",
+			"item": [
+				{
+					"name": "Auth-user user login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has token\", function () {",
+									"    pm.response.to.have.jsonBody(\"token\")",
+									"});",
+									"",
+									"response = pm.response.json();",
+									"pm.globals.set(\"jwt_token\", response.token);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "866685c9-0c79-4132-8520-a41f31fc3777",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{userpassword}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"login"
+							]
+						},
+						"description": "An endpoint to allow users to introduce themselves to the API. A valid username and password are required so that a JWT token is generated.\r\nIn this test case we are ensuring that a user can provide valid details and retrieve a jwt_token; we expect a token.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user user login",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "162"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.3"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 11 Nov 2019 10:44:45 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Auth-user fetch all business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has content\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has id\", function () {",
+									"    pm.response.to.have.jsonBody(\"[0]._id\")",
+									"});",
+									"",
+									"//response = pm.response.json();",
+									"//pm.globals.set(\"b_id\", response[0]['_id']);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses?pn={{pn}}&ps={{ps}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses"
+							],
+							"query": [
+								{
+									"key": "pn",
+									"value": "{{pn}}"
+								},
+								{
+									"key": "ps",
+									"value": "{{ps}}"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This endpoint allows anyone to retrieve via GET all businesses as a JSON list. By default, it returns the first 10, but the amount (ps) and page number (pn) can be specified as a parameter.\r\nIn this test case we are ensuring that an un-auth user can retrieve all businesses; a list of businesses is expected."
+					},
+					"response": [
+						{
+							"name": "Non-auth fetch all business",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "{{jwt_token}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Test Biz",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "town",
+											"value": "Belfast",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "rating",
+											"value": "3",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses?pn=0&ps=12",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses"
+									],
+									"query": [
+										{
+											"key": "pn",
+											"value": "0"
+										},
+										{
+											"key": "ps",
+											"value": "12"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user new business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Has new URL\", function () {",
+									"    pm.response.to.have.jsonBody(\"url\")",
+									"});",
+									"",
+									"response = pm.response.json();",
+									"pm.globals.set(\"new_url\", response.url);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "x-access-token",
+								"value": "{{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "business_address",
+									"value": "Belfast",
+									"type": "text"
+								},
+								{
+									"key": "business_postal_code",
+									"value": "981123",
+									"type": "text"
+								},
+								{
+									"key": "business_name",
+									"value": "BKD",
+									"type": "text"
+								},
+								{
+									"key": "ownership_name",
+									"value": "KJ",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses"
+							]
+						},
+						"description": "This endpoint allows authorised users to add a new business so long as their jwt_token is valid and they have provided [name, town, rating] as content in the POST request.\r\nIn this test case we are ensuring that a user can add a business with valid properties; we expect a URL of the new business.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user new business",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/x-www-form-urlencoded",
+										"type": "text"
+									},
+									{
+										"key": "x-access-token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Test Biz",
+											"type": "text"
+										},
+										{
+											"key": "town",
+											"value": "Belfast",
+											"type": "text"
+										},
+										{
+											"key": "rating",
+											"value": "3",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user view business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Is JSON (no test for if returns amounts)\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has business\", function () {",
+									"    pm.response.to.have.jsonBody(\"_id\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Keaton",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "stars",
+									"value": "Can do much better",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "comment",
+									"value": "2",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_url}}",
+							"host": [
+								"{{new_url}}"
+							]
+						},
+						"description": "This endpoint allows all-users to view a specific business by providing a valid business id. Only one should be returned.\r\nIn this test case we are ensuring that a user can view the business they've created; we expect a single business.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user view business",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ\n"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "Keaton",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "stars",
+											"value": "Can do much better",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "comment",
+											"value": "2",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc00ac6cb00047c0f64a41f",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc00ac6cb00047c0f64a41f"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user edit business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Is JSON (no test for if returns amounts)\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has edited url\", function () {",
+									"    pm.response.to.have.jsonBody(\"url\")",
+									"});",
+									"",
+									"response = pm.response.json();",
+									"pm.globals.set(\"edited_url\", response.url);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Revised biz",
+									"type": "text"
+								},
+								{
+									"key": "town",
+									"value": "Belfast",
+									"type": "text"
+								},
+								{
+									"key": "rating",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_url}}",
+							"host": [
+								"{{new_url}}"
+							]
+						},
+						"description": "This endpoint allows authorised users to edit an existing business so long as their jwt_token is valid and they have provided [name, town, rating] as content in the POST request and the specified business exists.\r\nIn this test case we are ensuring that a user can edit a business; we expect a URL of the business that was changed.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user edit business",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ\n"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Revised biz",
+											"type": "text"
+										},
+										{
+											"key": "town",
+											"value": "Belfast",
+											"type": "text"
+										},
+										{
+											"key": "rating",
+											"value": "4",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc00ac6cb00047c0f64a41f",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc00ac6cb00047c0f64a41f"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user view business after put",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Is JSON (no test for if returns amounts)\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has business\", function () {",
+									"    pm.response.to.have.jsonBody(\"_id\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Keaton",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "stars",
+									"value": "Can do much better",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "comment",
+									"value": "2",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_url}}",
+							"host": [
+								"{{new_url}}"
+							]
+						},
+						"description": "This endpoint allows all-users to view a specific business by providing a valid business id. Only one should be returned.\r\nIn this test case we are ensuring that a user can view the business they've changed; we expect a single business.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user view business after put",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "Keaton",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "stars",
+											"value": "Can do much better",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "comment",
+											"value": "2",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc00ac6cb00047c0f64a41f",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc00ac6cb00047c0f64a41f"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user delete business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Is JSON (no test for if returns amounts)\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has error message\", function () {",
+									"    pm.response.to.have.jsonBody(\"message\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Keaton",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "stars",
+									"value": "Can do much better",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "comment",
+									"value": "2",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_url}}",
+							"host": [
+								"{{new_url}}"
+							]
+						},
+						"description": "This endpoint will allow authorised admin users to remove a specified business so long as their jwt_token is valid, they are an admin and they specify an actual business.\r\nIn this test case we are ensuring that a non-admin user cannot delete a business; we expect an error message.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user delete business",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "Keaton",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "stars",
+											"value": "Can do much better",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "comment",
+											"value": "2",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc00ac6cb00047c0f64a41f",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc00ac6cb00047c0f64a41f"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user fetch reviews",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Is JSON (no test for if returns amounts)\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Keaton",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "stars",
+									"value": "Can do much better",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "comment",
+									"value": "2",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_url}}/reviews",
+							"host": [
+								"{{new_url}}"
+							],
+							"path": [
+								"reviews"
+							]
+						},
+						"description": "This endpoint allows all users to view all reviews of a specific business by providing a valid business id.\r\nIn this test case we are ensuring that a user can view the all the reviews of a business; we expect an empty array as a newly created business won't have any reviews.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user fetch reviews",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "Keaton",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "stars",
+											"value": "Can do much better",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "comment",
+											"value": "2",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc00ac6cb00047c0f64a41f/reviews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc00ac6cb00047c0f64a41f",
+										"reviews"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user add review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Has new URL\", function () {",
+									"    pm.response.to.have.jsonBody(\"url\")",
+									"});",
+									"",
+									"response = pm.response.json();",
+									"pm.globals.set(\"new_review_url\", response.url);",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Keaton",
+									"type": "text"
+								},
+								{
+									"key": "stars",
+									"value": "Can do much better",
+									"type": "text"
+								},
+								{
+									"key": "comment",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_url}}/reviews",
+							"host": [
+								"{{new_url}}"
+							],
+							"path": [
+								"reviews"
+							]
+						},
+						"description": "This endpoint allows authorised users to add a new review to a specific business so long as their jwt_token is valid and they have provided [username, comment, stars] as content in the POST request and are using a valid business id.\r\nIn this test case we are ensuring that a user can add a review to a specific business; we expect a URL of the newly created review.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user add review",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "Keaton",
+											"type": "text"
+										},
+										{
+											"key": "stars",
+											"value": "Can do much better",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": "2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc00ac6cb00047c0f64a41f/reviews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc00ac6cb00047c0f64a41f",
+										"reviews"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user fetch new review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Is JSON (no test for if returns amounts)\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has business\", function () {",
+									"    pm.response.to.have.jsonBody(\"_id\")",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Keaton",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "stars",
+									"value": "Can do much better",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "comment",
+									"value": "2",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_review_url}}",
+							"host": [
+								"{{new_review_url}}"
+							]
+						},
+						"description": "This endpoint allows all users to view a specific review of a specific business by providing a valid business id and review id.\r\nIn this test case we are ensuring that a user can view the review they've created; we expect a single review.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user fetch new review",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded",
+										"disabled": true
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "Keaton",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "stars",
+											"value": "Can do much better",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "comment",
+											"value": "2",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc00ac6cb00047c0f64a41f/reviews/5dc93c3b7f7aa7fef984bc53",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc00ac6cb00047c0f64a41f",
+										"reviews",
+										"5dc93c3b7f7aa7fef984bc53"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user edit review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Is JSON (no test for if returns amounts)\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has edited url\", function () {",
+									"    pm.response.to.have.jsonBody(\"url\")",
+									"});",
+									"",
+									"response = pm.response.json();",
+									"pm.globals.set(\"edited_review_url\", response.url);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Keaton_2",
+									"type": "text"
+								},
+								{
+									"key": "stars",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "comment",
+									"value": "Argh",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_review_url}}",
+							"host": [
+								"{{new_review_url}}"
+							]
+						},
+						"description": "This endpoint allows authorised users to edit the details of a specific review to a specific business so long as their jwt_token is valid and they have provided [username, comment, stars] as content in the POST request and are using a valid business and review id.\r\nIn this test case we are ensuring that a user can edit the review they've created; we expect the URL of the changed review.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user edit review",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "Keaton_2",
+											"type": "text"
+										},
+										{
+											"key": "stars",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": "Argh",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc00ac6cb00047c0f64a41f/reviews/5dc93c3b7f7aa7fef984bc53",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc00ac6cb00047c0f64a41f",
+										"reviews",
+										"5dc93c3b7f7aa7fef984bc53"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user delete review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Is JSON (no test for if returns amounts)\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has error message\", function () {",
+									"    pm.response.to.have.jsonBody(\"message\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Keaton",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "stars",
+									"value": "Can do much better",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "comment",
+									"value": "2",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_review_url}}",
+							"host": [
+								"{{new_review_url}}"
+							]
+						},
+						"description": "This endpoint will allow authorised admin users to remove a specified review so long as their jwt_token is valid, they are an admin and they specify an actual business and review.\r\nIn this test case we are ensuring that a non-admin user cannot delete the review they've created; we expect an error message.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user delete review",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "Keaton",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "stars",
+											"value": "Can do much better",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "comment",
+											"value": "2",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc00ac6cb00047c0f64a41f/reviews/5dc93c3b7f7aa7fef984bc53",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc00ac6cb00047c0f64a41f",
+										"reviews",
+										"5dc93c3b7f7aa7fef984bc53"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user fetch reviews after post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Is JSON (no test for if returns amounts)\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Keaton",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "stars",
+									"value": "Can do much better",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "comment",
+									"value": "2",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_url}}/reviews",
+							"host": [
+								"{{new_url}}"
+							],
+							"path": [
+								"reviews"
+							]
+						},
+						"description": "This endpoint allows all users to view a specific review of a specific business by providing a valid business id and review id.\r\nIn this test case we are ensuring that the review wasn't deleted; we expect a single review to be returned.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user fetch reviews after post",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "Keaton",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "stars",
+											"value": "Can do much better",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "comment",
+											"value": "2",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc00ac6cb00047c0f64a41f/reviews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc00ac6cb00047c0f64a41f",
+										"reviews"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Auth-user logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "313b235e-c0dc-47d4-9926-35b51a8b51ca",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Message is as expected\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Logout successful\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"logout"
+							]
+						},
+						"description": "This endpoint allows auth-users to logout by adding their jwt_token to a blacklist of tokens.\r\nIn this test case we are ensuring that a user is logged out of the system; we expect a success message.\r\n"
+					},
+					"response": [
+						{
+							"name": "Auth-user logout",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiaG9tZXIiLCJhZG1pbiI6ZmFsc2UsImV4cCI6MTU3MzQ3MDg4NX0.mWM5ohnNMvC1tWfb-C1yq4SggaoZRBqyjuCYa5zZtlQ"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/logout",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"logout"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Admin user",
+			"item": [
+				{
+					"name": "Admin-user user login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has token\", function () {",
+									"    pm.response.to.have.jsonBody(\"token\")",
+									"});",
+									"",
+									"response = pm.response.json();",
+									"pm.globals.set(\"jwt_token\", response.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "lisa_s",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "lisa",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"login"
+							]
+						},
+						"description": "An endpoint to allow users to introduce themselves to the API. A valid username and password are required so that a JWT token is generated.\r\nIn this test case we are ensuring that a user can provide valid details and retrieve a jwt_token; we expect a token.\r\n"
+					},
+					"response": [
+						{
+							"name": "Admin-user user login",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "159"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.3"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 11 Nov 2019 10:57:01 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoibGlzYSIsImFkbWluIjp0cnVlLCJleHAiOjE1NzM0NzE2MjF9.HkkoPTkxbBaQbAubEe0r48roA9YC5Pozgua6qzNYFCg\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Admin-user new business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc4cda7a-659b-4057-bb68-f334c48a4792",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Has new URL\", function () {",
+									"    pm.response.to.have.jsonBody(\"url\")",
+									"});",
+									"",
+									"response = pm.response.json();",
+									"pm.globals.set(\"new_url\", response.url);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"description": "Header to specify that the format of content is x-www-form-urlencoded",
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"description": "The resulting token value of logging in with valid credentials",
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Test Biz_3",
+									"description": "A character string for the business name",
+									"type": "text"
+								},
+								{
+									"key": "town",
+									"value": "Belfast_3",
+									"description": "A character string for the town where the business is located",
+									"type": "text"
+								},
+								{
+									"key": "rating",
+									"value": "3",
+									"description": "An integer in the range of 0-5 inclusive",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/businesses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"businesses"
+							]
+						},
+						"description": "This endpoint allows authorised users to add a new business so long as their jwt_token is valid and they have provided [name, town, rating] as content in the POST request.\r\nIn this test case we are ensuring that a user can add a business with valid properties; we expect a URL of the new business.\r\n"
+					},
+					"response": [
+						{
+							"name": "Admin-user new business",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Header to specify that the format of content is x-www-form-urlencoded",
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"description": "The resulting token value of logging in with valid credentials",
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoibGlzYSIsImFkbWluIjp0cnVlLCJleHAiOjE1NzM0NzE2MjF9.HkkoPTkxbBaQbAubEe0r48roA9YC5Pozgua6qzNYFCg"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Test Biz_3",
+											"description": "A character string for the business name",
+											"type": "text"
+										},
+										{
+											"key": "town",
+											"value": "Belfast_3",
+											"description": "A character string for the town where the business is located",
+											"type": "text"
+										},
+										{
+											"key": "rating",
+											"value": "3",
+											"description": "An integer in the range of 0-5 inclusive",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses"
+									]
+								}
+							},
+							"status": "CREATED",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "82"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.3"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 11 Nov 2019 10:57:35 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"url\": \"http://localhost:5000/api/v1.0/businesses/5dc93e9f7f7aa7fef984bc54\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Admin-user add review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Has new URL\", function () {",
+									"    pm.response.to.have.jsonBody(\"url\")",
+									"});",
+									"",
+									"response = pm.response.json();",
+									"pm.globals.set(\"new_review_url\", response.url);",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"description": "Header to specify that the format of content is x-www-form-urlencoded",
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"description": "The resulting token value of logging in with valid credentials",
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "Keaton",
+									"description": "A character string for the users name",
+									"type": "text"
+								},
+								{
+									"key": "stars",
+									"value": "Can do much better",
+									"description": "An integer in the range of 0-5 inclusive",
+									"type": "text"
+								},
+								{
+									"key": "comment",
+									"value": "2",
+									"description": "A character string for the users comment on the business",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_url}}/reviews",
+							"host": [
+								"{{new_url}}"
+							],
+							"path": [
+								"reviews"
+							]
+						},
+						"description": "This endpoint allows authorised users to add a new review to a specific business so long as their jwt_token is valid and they have provided [username, comment, stars] as content in the POST request and are using a valid business id.\r\nIn this test case we are ensuring that a user can add a review to a specific business; we expect a URL of the newly created review.\r\n"
+					},
+					"response": [
+						{
+							"name": "Admin-user add review",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "Header to specify that the format of content is x-www-form-urlencoded",
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"description": "The resulting token value of logging in with valid credentials",
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoibGlzYSIsImFkbWluIjp0cnVlLCJleHAiOjE1NzM0NzE2MjF9.HkkoPTkxbBaQbAubEe0r48roA9YC5Pozgua6qzNYFCg"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "Keaton",
+											"description": "A character string for the users name",
+											"type": "text"
+										},
+										{
+											"key": "stars",
+											"value": "Can do much better",
+											"description": "An integer in the range of 0-5 inclusive",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": "2",
+											"description": "A character string for the users comment on the business",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc93e9f7f7aa7fef984bc54/reviews",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc93e9f7f7aa7fef984bc54",
+										"reviews"
+									]
+								}
+							},
+							"status": "CREATED",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "115"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.3"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 11 Nov 2019 10:58:35 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"url\": \"http://localhost:5000/api/v1.0/businesses/5dc93e9f7f7aa7fef984bc54/reviews/5dc93edb7f7aa7fef984bc55\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Admin-user delete review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"description": "The resulting token value of logging in with valid credentials",
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_review_url}}",
+							"host": [
+								"{{new_review_url}}"
+							]
+						},
+						"description": "This endpoint will allow authorised admin users to remove a specified review so long as their jwt_token is valid, they are an admin and they specify an actual business and review.\r\nIn this test case we are ensuring that an admin user can delete the review they've created; we expect success.\r\n"
+					},
+					"response": [
+						{
+							"name": "Admin-user delete review",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"description": "The resulting token value of logging in with valid credentials",
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoibGlzYSIsImFkbWluIjp0cnVlLCJleHAiOjE1NzM0NzE2MjF9.HkkoPTkxbBaQbAubEe0r48roA9YC5Pozgua6qzNYFCg"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc93e9f7f7aa7fef984bc54/reviews/5dc93edb7f7aa7fef984bc55",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc93e9f7f7aa7fef984bc54",
+										"reviews",
+										"5dc93edb7f7aa7fef984bc55"
+									]
+								}
+							},
+							"status": "NO CONTENT",
+							"code": 204,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.3"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 11 Nov 2019 10:59:19 GMT"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Admin-user fetch new review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "The resulting token value of logging in with valid credentials",
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_review_url}}",
+							"host": [
+								"{{new_review_url}}"
+							]
+						},
+						"description": "This endpoint allows all users to view a specific review of a specific business by providing a valid business id and review id.\r\nIn this test case we are ensuring that the deleted review no longer exists; we expect an error message.\r\n"
+					},
+					"response": [
+						{
+							"name": "Admin-user fetch new review",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "The resulting token value of logging in with valid credentials",
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoibGlzYSIsImFkbWluIjp0cnVlLCJleHAiOjE1NzM0NzE2MjF9.HkkoPTkxbBaQbAubEe0r48roA9YC5Pozgua6qzNYFCg"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc93e9f7f7aa7fef984bc54/reviews/5dc93edb7f7aa7fef984bc55",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc93e9f7f7aa7fef984bc54",
+										"reviews",
+										"5dc93edb7f7aa7fef984bc55"
+									]
+								}
+							},
+							"status": "NOT FOUND",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "37"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.3"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 11 Nov 2019 11:00:22 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"No business found\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Admin-user delete business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"description": "The resulting token value of logging in with valid credentials",
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{new_url}}",
+							"host": [
+								"{{new_url}}"
+							]
+						},
+						"description": "This endpoint will allow authorised admin users to remove a specified business so long as their jwt_token is valid, they are an admin and they specify an actual business.\r\nIn this test case we are ensuring that an admin user can delete a business; we expect success.\r\n"
+					},
+					"response": [
+						{
+							"name": "Admin-user delete business",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"description": "The resulting token value of logging in with valid credentials",
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoibGlzYSIsImFkbWluIjp0cnVlLCJleHAiOjE1NzM0NzE2MjF9.HkkoPTkxbBaQbAubEe0r48roA9YC5Pozgua6qzNYFCg"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc93e9f7f7aa7fef984bc54",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc93e9f7f7aa7fef984bc54"
+									]
+								}
+							},
+							"status": "NO CONTENT",
+							"code": 204,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.3"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 11 Nov 2019 11:00:55 GMT"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Admin-user view business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "23d920ab-fcfe-4437-85aa-14746e985f8b",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Is JSON (no test for if returns amounts)\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Has error message\", function () {",
+									"    pm.response.to.have.jsonBody(\"error\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "The resulting token value of logging in with valid credentials",
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{new_url}}",
+							"host": [
+								"{{new_url}}"
+							]
+						},
+						"description": "This endpoint allows all-users to view a specific business by providing a valid business id. Only one should be returned.\r\nIn this test case we are ensuring that the deleted business no longer exists; we expect success.\r\n"
+					},
+					"response": [
+						{
+							"name": "Admin-user view business",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "The resulting token value of logging in with valid credentials",
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoibGlzYSIsImFkbWluIjp0cnVlLCJleHAiOjE1NzM0NzE2MjF9.HkkoPTkxbBaQbAubEe0r48roA9YC5Pozgua6qzNYFCg"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/businesses/5dc93e9f7f7aa7fef984bc54",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"businesses",
+										"5dc93e9f7f7aa7fef984bc54"
+									]
+								}
+							},
+							"status": "NOT FOUND",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "41"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.3"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 11 Nov 2019 11:01:23 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Business does not exist\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Admin-user logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "313b235e-c0dc-47d4-9926-35b51a8b51ca",
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Message is as expected\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Logout successful\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "The resulting token value of logging in with valid credentials",
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/v1.0/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1.0",
+								"logout"
+							]
+						},
+						"description": "This endpoint allows auth-users to logout by adding their jwt_token to a blacklist of tokens.\r\nIn this test case we are ensuring that a user is logged out of the system; we expect a success message.\r\n"
+					},
+					"response": [
+						{
+							"name": "Admin-user logout",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "The resulting token value of logging in with valid credentials",
+										"key": "x-access-token",
+										"type": "text",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoibGlzYSIsImFkbWluIjp0cnVlLCJleHAiOjE1NzM0NzE2MjF9.HkkoPTkxbBaQbAubEe0r48roA9YC5Pozgua6qzNYFCg"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:5000/api/v1.0/logout",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"v1.0",
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "37"
+								},
+								{
+									"key": "Server",
+									"value": "Werkzeug/0.16.0 Python/3.7.3"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 11 Nov 2019 11:01:55 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logout successful\"\n}"
+						}
+					]
+				}
+			],
+			"description": "This is fully documented - the headings and content of the rest arn't done. The example also include response data of these ones",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c6846079-0988-4764-b070-f43a3e63239b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "77aa2673-cb94-4a59-9f16-69517291de7f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "homer",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "homer_s",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "19822c1d-ba6c-4069-80d6-b2955772aa4a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "00d22c41-e97c-4994-826d-eeee2b01bc52",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -23,7 +23,8 @@ export class BusinessesComponent {
 		}//console.log(['sessionStorage',sessionStorage])
 		
 		this.webService.getBusinesses({
-			'page': this.page[this.sesStoID]
+			'page': this.page[this.sesStoID],
+			//'sessionPageName': this.sesStoID,
 		});
 	}
 	
@@ -34,6 +35,7 @@ export class BusinessesComponent {
 			this.page[this.sesStoID] = pageN;
 			sessionStorage[this.sesStoID] = pageN;
 			this.webService.getBusinesses({
+				[this.sHID]: this.webService[this.sHID].lastID(),//Equaivant to this.route.snapshot.params('b_id')
 				'page':pageN
 			});
 		}

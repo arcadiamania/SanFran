@@ -1,0 +1,74 @@
+P:
+cd P:\Final year\COM633- Full Stack\Pract8
+mkdir VM
+cd VM
+python -m venv venv
+venv\Scripts\activate
+pip install flask
+pip install pymongo
+pip install pyjwt
+pip install bcrypt
+pip install flask_cors
+
+mongoimport --db bizDB --collection businesses --jsonArray "P:\Final year\COM633- Full Stack\bizDB-businesses.json"
+mongoimport --db bizDB --collection users --jsonArray "P:\Final year\COM633- Full Stack\bizDB-users.json"
+
+python create_users.py
+
+mongod
+
+mongo
+use bizDB
+db.businesses.find().limit(1).pretty()
+
+python app.py
+
+#go to jwt.io for token, remember to add sectert key to verify signiture
+
+Remember that postman needs to x-www-form-urlencoded (will allow body to have content)
+
+mongoexport --db bizDB --collection users --out "P:\Final year\COM633- Full Stack\bizDB-users.json" --jsonArray --pretty
+mongoexport --db bizDB --collection businesses --out "P:\Final year\COM633- Full Stack\bizDB-businesses.json" --jsonArray --pretty
+
+
+
+
+
+mongod
+
+P:
+mongoimport --db bizDB --collection businesses --jsonArray "P:\Final year\COM633- Full Stack\bizDB-businesses.json"
+mongoimport --db bizDB --collection users --jsonArray "P:\Final year\COM633- Full Stack\bizDB-users.json"
+cd P:\Final year\COM633- Full Stack\PractB8\VM
+venv\Scripts\activate
+python app.py
+
+C:\Users
+#Click on Administrator to grant access
+
+C:
+cd C:\Users\b00708469\Desktop\C1
+npm install
+ng serve
+
+http://localhost:4200/
+http://localhost:4200/businesses
+http://localhost:4200/businesses/589ddf35f3ff092e206f04e8
+
+localhost:5000/api/v1.0/login
+Basic: lisa	lisa_s
+x-access-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoibGlzYSIsImFkbWluIjp0cnVlLCJleHAiOjE1NzUyODgxMDd9.cfuHx8DzV3VSCV-ei9qLBFnPtoWxYjF6eJmbG9qbJzU
+localhost:5000/api/v1.0/businesses/589ddf35f3ff092e206f04e8/reviews
+
+
+Auth0
+	email: sullivan-k@ulster.ac.uk
+	tennent: dev-gmilmwkg.auth0.com
+	Client id: oEEUfl45G0309q7R6eBrjE8sAEXNQvqV
+	Client sectert: vJTmyYKJOWgt5inBqmOFI1j8sXeVqNfK0aI4RTP6OlUmQqq8qK4alGTMKVsuUeB3
+	
+C:/Users/B00708469/Desktop/C5> npm install @auth0/auth0-spa-js --save
+
+
+mongoimport --db bizDB --collection businesses --jsonArray "D:\Documents\Final year\Full stack\mongodb-san-fran-2.json"
+mongoimport --db bizDB --collection users --jsonArray "D:\Documents\Final year\SanFran\db_data\bizDB-users.json"

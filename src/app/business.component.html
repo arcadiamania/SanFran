@@ -20,8 +20,8 @@
 		<div class="col-sm-12">
 			<div *ngFor = "let business of webService.b_id.list | async"><!--C3, from michel email-->
 				<div class="card text-white bg-primary mb-3"
-					[routerLink]="['/businesses', business._id]"
-					style="cursor: pointer"><!--C1,19-->
+					
+					style="cursor: pointer"><!--[routerLink]="['/businesses', business._id]"-->
 					<div class="card-header">
 						{{ business.business_name }}
 					</div>
@@ -30,11 +30,14 @@
 					</div>
 					<div class="card-body">
 						<div class="mapouter">
-							<div class="gmap_canvas">
-								<iframe width="400" height="400" id="gmap_canvas" [src]="sanitizer.bypassSecurityTrustResourceUrl(business.business_location)" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
-								<!--a href="https://www.whatismyip-address.com">show me where i am now</a-->
+							<div class="spinner-grow" style="width:100%;height:400px;position:absolute;left:0px;z-index:0;" role="status">
+							  <span class="sr-only">Loading...</span>
 							</div>
-							<style>.mapouter{position:relative;text-align:right;height:400px;width:400px;}.gmap_canvas {overflow:hidden;background:none!important;height:400px;width:400px;}</style>
+							<div class="gmap_canvas">
+								<iframe width="100%" height="400" id="gmap_canvas" [src]="sanitizer.bypassSecurityTrustResourceUrl(business.business_location)" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+							</div>
+							<style>.mapouter{position:relative;text-align:right;height:400px;width:100%;}.gmap_canvas {position:relative;overflow:hidden;background:none!important;height:400px;width:100%;}</style>
+							
 						</div>
 					</div>
 					<div class="card-footer">
@@ -79,9 +82,10 @@
 <nav aria-label="Page navigation example">
   <ul class="pagination justify-content-center">
     <li class="page-item" style="cursor:pointer"
-	  [ngClass]="{'active': pageNav.isCurrent, 'text-secondary': !pageNav.isPageObj, 'text-primary': !pageNav.isCurrent && pageNav.isPageObj}"
-	  *ngFor = "let pageNav of webService.r.navPages" >
+	  *ngFor = "let pageNav of webService.r.navPages" 
+	  [ngClass]="{'active': pageNav.isCurrent, 'text-secondary': !pageNav.isPageObj, 'text-primary': !pageNav.isCurrent && pageNav.isPageObj}">
 		<a class="page-link" (click)="changePage(pageNav)">{{pageNav.pageText}}</a>
+		<!--a class="page-link" (click)="changePage(pageNav)">{{pageNav.pageText}}</a-->
 	</li>
   </ul>
 </nav>
@@ -91,7 +95,7 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<h2>Please review this business</h2>
-			<!----><form [formGroup]="theForm" (ngSubmit)="webService.r.onSubmit()">
+			<!----><form [formGroup]="theForm.r" (ngSubmit)="webService.r.onSubmit()">
 				<div class="form-group">
 					<label for="name">Name</label>
 					<input type="text" id="name" name="name" class="form-control" formControlName="name"

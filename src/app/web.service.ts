@@ -24,7 +24,8 @@ export class WebService {
 		{'sHID':'i',	'getFun':this.getInspections,	},
 		{'sHID':'i_id',	'getFun':this.getInspection,	},
 		{'sHID':'v',	'getFun':this.getViolations,	},
-		{'sHID':'v_id',	'getFun':this.getViolation,		}
+		{'sHID':'v_id',	'getFun':this.getViolation,		},
+		{'sHID':'c',	'getFun':this.getCodes,	},
 	]
 	
 	
@@ -60,6 +61,7 @@ export class WebService {
 		var _http = webService.http;
 		var _self = null;
 		var _pagination = {};
+		//var _session_page_name = false:
 		var _hasError = true;
 		
 		var _get = getFun;
@@ -93,7 +95,7 @@ export class WebService {
 				'current_page':res.current_page,
 				'last_page':res.last_page,
 				'page_size':res.page_size,
-				'count':res.count
+				'count':res.count,
 			};
 			
 			this.setList(res.results);
@@ -107,9 +109,9 @@ export class WebService {
 				this.hasResults=false;
 			};
 			
-			this.setPages(3);
+			this.setPages(3);//Number*2+1 is max pages to display - based on digit
 			
-			//console.log(this.navPages)
+			console.log(this.navPages)
 			this.url = this.fullPath();
 			
 			return _self;
@@ -126,14 +128,12 @@ export class WebService {
 		};
 		this.setList = function (resultList){
 			_private_list = (resultList.hasOwnProperty('length')) ? resultList : [resultList];
-			//console.log(_private_list)
+			console.log(_private_list)
 			return true;
 		};
 		this.setError = function(error){
 			//Avoid setting error as a falsy value... You cheeky sod
 			_hasError = (error) ? error : false;
-			
-			
 		}
 		this.hasError = function(){
 			return _hasError;
@@ -188,6 +188,9 @@ export class WebService {
 			
 			return pObj;
 		};
+		/*this.setSessionPageName = function(sessionPageName){
+			_session_page_name = sessionPageName;
+		};*/
 		this.canNextPage = function(currentPage, amount){
 			if (!this.hasResults || _hasError){return false};
 			
@@ -225,6 +228,20 @@ export class WebService {
 			//Ensure using valid page - TODO check if no results can pass other validation
 			currentPage = (currentPage <= lastPage) ? currentPage : lastPage;
 			currentPage = (currentPage >= 1) ? currentPage : 1;
+			
+			if (lastPage == currentPage == 1){
+				this.navPages = [{
+					'pageText': 'All displayed',
+					'pageNumber': 1,
+					'isPageObj':true,
+					'isNextObj':false,
+					'isPreviousObj':false,
+					'isFirst': true,
+					'isCurrent': true,
+					'isLast': true,
+				}];
+				return;
+			}
 			
 			let pagStart = this.canPreviousPage(currentPage, pageDistance);
 			let pagEnd = this.canNextPage(currentPage, pageDistance);
@@ -292,7 +309,7 @@ export class WebService {
 		}
 		
 		
-		this.updateLocations = function(objWithLocations){
+		this.updateLocations = function(objWithLocations, isTerain){
 			if (!this.hasResults || _hasError){return false};
 			
 			objWithLocations = (typeof objWithLocations === "undefined") ? _private_list : objWithLocations;
@@ -306,7 +323,7 @@ export class WebService {
 				}
 				if (search_term){
 					search_term = encodeURIComponent(search_term);
-					item['business_location'] = "https://maps.google.com/maps?q="+search_term+"&t=k&z=19&ie=UTF8&iwloc=&output=embed"
+					item['business_location'] = "https://maps.google.com/maps?q="+search_term+((_private_list.length == 1)?'&t=k&z=19':'&z=15')+"&ie=UTF8&iwloc=&output=embed"
 					//console.log(item['business_location'])
 				} else {
 					item['business_location'] = null;
@@ -393,11 +410,42 @@ export class WebService {
 		}
 	};
 	
+	
+	getCodes(params){
+		let page = params.page;
+		this.c = this.serviceStrut.c;
+		let helper = this.c;
+		
+		if (params.snapshot){
+			helper.setPath(["codes", params.snapshot.url[1].path]);
+		}
+		
+		//let sessionPageName = params.sessionPageName;
+		
+		console.log(helper.fullPath() + '?pn=' + page)
+		return this.http.get(
+			helper.fullPath() 
+			+ '?pn=' + page
+		).subscribe(
+			response => {
+				//console.log(['getBusinesses response',response])
+				helper.setResponce(response).next();
+				//helper.nextNav();
+			},
+			error => {
+				//console.log(error);
+				helper.setError(error);
+			}//,() => {onCompleted callback}
+		);
+	}
+	
 	getBusinesses(params){
 		let page = params.page;
 		this.b = this.serviceStrut.b;
 		let helper = this.b;
 		helper.setPath(["businesses"]);
+		
+		//let sessionPageName = params.sessionPageName;
 		
 		return this.http.get(
 			helper.fullPath() 
@@ -438,16 +486,17 @@ export class WebService {
 	getReviews(params){
 		console.log(['getReviews(params)',params])
 		let page = params.page;
-		let b_id = params.b_id;
+		//let b_id = params.b_id;
+		let sessionPageName = params.sessionPageName;
 		
 		if (params['self']){
 			this.r = params['self'];
 		} else {
 			this.r = this.serviceStrut['r'];
 		}
-		
 		let helper = this.r;
-		helper.setPath(["businesses",b_id,"reviews"]);
+		
+		helper.setPath(this.b_id.path().concat(["reviews"]));
 		
 		return this.http.get(
 			helper.fullPath()
@@ -464,9 +513,91 @@ export class WebService {
 			}//,() => {onCompleted callback}
 		);
 	}
-	getInspections(){}
-	getInspection(){}
-	getViolations(){}
+	getInspections(params){
+		console.log(['getInspections(params)',params])
+		let page = params.page;
+		
+		if (params['self']){
+			this.i = params['self'];
+		} else {
+			this.i = this.serviceStrut['i'];
+		}
+		let helper = this.i;
+		
+		helper.setPath(this.b_id.path().concat(["inspections"]));
+		
+		return this.http.get(
+			helper.fullPath()
+			+ '?pn=' + page
+		).subscribe(
+			response => {
+				console.log(['getInspections response',response])
+				helper.setResponce(response).next();
+			},
+			error => {
+				helper.setError(error);
+			}
+		);
+	}
+	getInspection(params){
+		let snapshot = params.snapshot;
+		let page = params.page;
+		let i_id = params.i_id;
+		if (params['self']){
+			this.i_id = params['self'];
+		} else {
+			this.i_id = this.serviceStrut.i_id;
+		}
+		let helper = this.i_id;
+		
+		let pathSnapshot = [];
+		for (let url of snapshot.url){
+			pathSnapshot.push(url.path);
+		}
+		console.log(pathSnapshot)
+		
+		helper.setPath(pathSnapshot); //An ID should be passed
+		
+		return this.http.get(
+			helper.fullPath()
+			+ '?pn=' + page
+		).subscribe(
+			response => {
+				console.log(['getInspections response',response])
+				helper.setResponce(response).next();
+			},
+			error => {
+				helper.setError(error);
+			}
+		);
+		
+	}
+	getViolations(params){
+		console.log(['getViolations(params)',params])
+		let page = params.page;
+		
+		if (params['self']){
+			this.v = params['self'];
+		} else {
+			this.v = this.serviceStrut['v'];
+		}
+		let helper = this.v;
+		
+		helper.setPath(this.i_id.path().concat(["violations"]));
+		
+		return this.http.get(
+			helper.fullPath()
+			+ '?pn=' + page
+		).subscribe(
+			response => {
+				console.log(['getViolations response',response])
+				helper.setResponce(response).next();
+			},
+			error => {
+				helper.setError(error);
+			}
+		);
+	}
 	
 	vote(votingURL){
 		console.log(votingURL)

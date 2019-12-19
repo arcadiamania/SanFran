@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from './auth.service';
+import { ActivatedRoute } from '@angular/router';//C2,20
 
 @Component({
  selector: 'navigation',
@@ -8,5 +9,13 @@ import { AuthService } from './auth.service';
 })
 
 export class NavComponent { 
-	constructor(private authService: AuthService) { }
+	constructor(
+		private authService: AuthService,
+		private route: ActivatedRoute
+	) {}
+	
+	
+	setBreadcrumbs(path){
+		
+	}
 }

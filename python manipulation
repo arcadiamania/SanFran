@@ -1,0 +1,158 @@
+import csv
+import json
+from bson import ObjectId
+from random import randint
+
+with open('P:\\Final year\\COM633- Full Stack\\database backups\\business_san_fran.csv', newline='') as csvfile:
+    business = list(csv.reader(csvfile))
+
+with open('P:\\Final year\\COM633- Full Stack\\database backups\\inspection_san_fran.csv', newline='') as csvfile:
+    inspection = list(csv.reader(csvfile))
+
+with open('P:\\Final year\\COM633- Full Stack\\database backups\\violation_san_fran.csv', newline='') as csvfile:
+    violation = list(csv.reader(csvfile))
+
+b_f = business.pop(0)
+i_f = inspection.pop(0)
+v_f = violation.pop(0)
+
+business_size = len(business)
+print(str(business_size) + ' records')
+# matches = (x for x in inspection if business[0][0] == x[0])
+#
+# canContinue = True
+# while canContinue:
+#     val = next(matches, False)
+#     print(val)
+#     canContinue = val != False
+#
+# business_list
+
+#business = business[0:100]
+
+count = 0
+
+bus_list = []
+
+for bus in business:
+    count += 1
+
+    bus_prep = bus
+    bus_par = {
+        "_id":{
+            "$oid":ObjectId().__str__()
+        },
+        b_f[0]:bus[0],
+        b_f[1]:bus[1],
+        b_f[2]:bus[2],
+        b_f[3]:bus[3],
+        b_f[4]:bus[4],
+        b_f[5]:bus[5],
+        b_f[6]:bus[6],
+        b_f[7]:bus[7],
+        b_f[8]:bus[8],
+        b_f[9]:bus[9],
+        b_f[10]:bus[10],
+        b_f[11]:bus[11],
+        b_f[12]:bus[12],
+        b_f[13]:bus[13],
+        b_f[14]:bus[14],
+        b_f[15]:bus[15],
+        b_f[16]:bus[16],
+        b_f[17]:bus[17],
+        b_f[18]:bus[18],
+        b_f[19]:bus[19],
+        'inspections':[]
+    }
+
+    if bus_par['supervisor_district'] == "":
+        bus_par['supervisor_district'] = randint(1,11)
+
+
+    if bus_par['business_location'] == "" and bus_par['Business Location'] != "":
+        location = bus_par['Business Location'][7:-1].split()
+        bus_par['business_latitude'] = location[1]
+        bus_par['business_longitude'] = location[0]
+        bus_par['business_location'] = bus_par['Business Location']
+
+
+    for intConv in ['mail_zipcode', 'business_postal_code', 'business_id', 'business_account_number', 'supervisor_district']:
+        if bus_par[intConv] != "" and not isinstance(bus_par[intConv], int):
+            bus_par[intConv] = int(bus_par[intConv])
+
+
+    del bus_par['Business Location']
+
+    ins_match = (x for x in inspection if bus[0] == x[0])
+
+    ins_list = []
+    ins_val = True
+    while ins_val != False:
+        ins_val = next(ins_match, False)
+        if ins_val != False:
+            ins_par = {
+                "_id":{
+                    "$oid":ObjectId().__str__()
+                },
+                i_f[1]:ins_val[1],
+                i_f[2]:ins_val[2],
+                i_f[3]:ins_val[3],
+                i_f[4]:ins_val[4],
+                'violations':[]
+            }
+            if ins_par["inspection_score"] != "" and not isinstance(ins_par["inspection_score"], int):
+                ins_par["inspection_score"] = int(ins_par["inspection_score"])
+
+            vio_match = (x for x in violation if ins_val[1] == x[1])
+
+            vio_list = []
+            vio_val = True
+            while vio_val != False:
+                vio_val = next(vio_match, False)
+                if vio_val != False:
+                    vio_par = {
+                        "_id":{
+                            "$oid":ObjectId().__str__()
+                        },
+                        v_f[2]:vio_val[2],
+                        v_f[3]:vio_val[3],
+                        v_f[4]:vio_val[4]
+                    }
+                    #vio_list.append(vio_val[2:])
+                    vio_list.append(vio_par)
+            #ins_val.append(vio_list)
+            ins_par['violations'] = vio_list
+
+            ins_list.append(ins_par)
+    #bus_prep.append(ins_list)
+
+    bus_par['inspections'] = ins_list
+    #bus_list.append(bus_prep)
+    bus_list.append(bus_par)
+
+    if count % 100 == 0:
+        print(str((count*100) // business_size) + '% of records imported')
+     #there is no link - got to create one
+
+
+print(bus[0])
+print(b_f)
+print(business[0])
+print('\n')
+print(i_f)
+print(inspection[0])
+print('\n')
+print(v_f)
+print(violation[0])
+print('\n')
+
+#print(jsonify(bus_list))
+to_json = json.dumps(bus_list, indent=4, sort_keys=True)
+print('to_json')
+print(to_json)
+
+file = open("P:\\Final year\\COM633- Full Stack\\database backups\\output.json","w+")
+#file.write(jsonify(bus_list))
+file.write(to_json)
+file.close()
+

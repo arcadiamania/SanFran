@@ -15,6 +15,7 @@ import { BusinessesComponent } from './businesses.component';//To import custom 
 import { BusinessComponent } from './business.component';//C2,18
 import { InspectionsComponent } from './inspections.component';//C2,18
 import { InspectionComponent } from './inspection.component';//C2,18
+import { CodesComponent } from './codes.component';//C2,18
 
 
 var routes = [
@@ -38,6 +39,10 @@ var routes = [
 		path: 'businesses/:b_id/inspections/:i_id',
 		component: InspectionComponent
 	},
+	{
+		path: 'codes/:c_id',
+		component: CodesComponent
+	},
 ];
 
 @NgModule({
@@ -50,6 +55,7 @@ var routes = [
 	//As there is no reviews components, assuming the last subdoc doesnt need component
     InspectionsComponent,
 	InspectionComponent,
+	CodesComponent
   ],
   imports: [
     BrowserModule,

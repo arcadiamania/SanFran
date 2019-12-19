@@ -35,9 +35,8 @@ default_ps = 10
 def jwt_required(func):
     @wraps(func)
     def jwt_required_wrapper(*args, **kwargs):
+        #print()
         #token = request.args.get('token')
-        if DEBUG:
-          return func(*args, **kwargs)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
@@ -105,6 +104,33 @@ def fix_review_count():
             output = output + "Business " + str(business["_id"]) + " is OK<br>"
     return make_response(output)
 '''
+
+@app.route("/api/v1.0/codes/<int:c_id>", methods=["GET"])#token will get picked up
+def show_zipcode(c_id):
+    #if not valid_id_format(id):
+    #    return make_response(jsonify({"error": "id is not a 24 digit hexidecimal string"}),404)
+    index, size = get_pagination_index(request, default_ps)
+    find_result = prepare_results(
+      find_all_documents(
+        database_con=businesses,
+        page_index=index,
+        page_size=size,
+        sort={
+          'business_name' : 1
+        },
+        final_match={
+          'business_postal_code': c_id
+        }
+      )
+    )
+
+    print(find_result)
+
+
+    if find_result and len(find_result['results']) > 0:
+      return make_response(jsonify( find_result ),200)
+    else:
+        return make_response(jsonify({"error": "Zipcode has no SanFran businesses"}),404)
 
 @app.route("/api/v1.0/businesses", methods=["GET"])
 def show_all_businesses():

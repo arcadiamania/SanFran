@@ -1,0 +1,102 @@
+
+<div class="container" style="margin-top:100px;">
+	<div class="row">
+		<div class="col-sm-12">
+			<div *ngFor = "let inspection of webService.i_id.list | async"><!--C3, from michel email-->
+				<div class="card text-white bg-primary mb-3" style="cursor: pointer"><!--[routerLink]="['/businesses', business._id]"-->
+					<div class="card-header">
+						{{ inspection.inspection_type }} on {{ inspection.inspection_date | date: 'dd MMMM yyyy' }}
+					</div>
+					<div class="card-body" *ngIf="inspection.inspection_score">
+						Score: {{ inspection.inspection_score }}
+					</div>
+					<div class="card-body">
+						Inspection ID: {{ inspection.inspection_id }}
+					</div>
+					<div class="card-footer" *ngIf="inspection.violation_count == 0">
+						Identifed no violations
+					</div>
+					<div class="card-footer" *ngIf="inspection.violation_count != 0">
+						Identifed {{ inspection.violation_count }} violations:
+					</div>
+				</div>
+			</div>
+		</div> <!-- col -->
+	</div> <!-- row -->
+</div> <!-- container -->
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="card bg-light mb-3"
+		*ngFor = "let violation of webService.v.list | async"
+		[ngClass]="{'bg-danger': violation.risk_category == 'High Risk', 'bg-warning': violation.risk_category == 'Moderate Risk', 'bg-light': violation.risk_category == 'Low Risk'}">
+			<div class="card-header" >
+				{{violation.risk_category}}
+			</div>
+			<div class="card-body">
+				{{ violation.violation_description }}
+			</div>
+			<div class="card-footer" >
+				<div class="btn-group btn-group-toggle" data-toggle="buttons">
+				  <label class="btn btn-outline-success"><!--###Add angular class here with 'active' class -->
+					<input type="radio" name="options" id="upVote"  autocomplete="off" checked 
+					  (click)="webService.vote()">
+					    TODO, have ADDRESSED check box
+				  </label>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item" style="cursor:pointer"
+	  *ngFor = "let pageNav of webService.v.navPages"
+	  [ngClass]="{'active': pageNav.isCurrent, 'text-secondary': !pageNav.isPageObj, 'text-primary': !pageNav.isCurrent && pageNav.isPageObj}">
+		<a class="page-link" (click)="changePage(pageNav)">{{pageNav.pageText}}</a>
+		<!--a class="page-link" (click)="changePage(pageNav)">{{pageNav.pageText}}</a-->
+	</li>
+  </ul>
+</nav>
+
+<!--div *ngIf="authService.loggedIn" class="container"-->
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12">
+			<h2>Violations</h2>
+			<!----><form [formGroup]="theForm.v" (ngSubmit)="webService.v.onSubmit()">
+				<div class="form-group">
+					<label for="v_name">Violation ID</label>
+					<input type="text" id="v_name" name="v_name" class="form-control" formControlName="v_name"
+						[ngClass]="{'error': webService.v.isInvalid('v_name')}"
+					>
+				</div>
+				<div class="form-group">
+					<label for="v_desc">Description</label>
+					<textarea id="v_desc" rows="3" name="v_desc" class="form-control" formControlName="v_desc"
+						[ngClass]="{'error': webService.v.isInvalid('v_desc')}"
+					></textarea>
+				</div>
+				<div class="form-group">
+					<label for="v_risk">Risk</label>
+					<select id="v_risk" name="v_risk" class="form-control" formControlName="v_risk">
+						<option value="Low Risk">Low Risk</option>
+						<option value="Moderate Risk">Moderate Risk</option>
+						<option value="High Risk">High Risk</option>
+					</select>
+				</div>
+				<span *ngIf="webService.v.isIncomplete()">You must complete all fields</span>
+				<button *ngIf="!webService.v.isIncomplete()" type="submit" class="btn btn-primary">Submit</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="!authService.loggedIn" class="container">
+	<div class="row">
+		<div class="col-sm-12">
+			<h2>Please login to review this business</h2>
+		</div>
+	</div>
+</div>
