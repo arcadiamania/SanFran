@@ -118,6 +118,10 @@ def show_zipcode(c_id):
         sort={
           'business_name' : 1
         },
+        projection={
+          'inspections':0,
+          'reviews':0
+        },
         final_match={
           'business_postal_code': c_id
         }
@@ -141,7 +145,11 @@ def show_all_businesses():
       find_all_documents(
         database_con=businesses,
         page_index=index,
-        page_size=size
+        page_size=size,
+        projection={
+          'inspections': 0,
+          'reviews': 0
+        },
       )
     )
 
@@ -297,7 +305,7 @@ def fetch_all_reviews(id):
         ],
         page_index=index,
         page_size=size,
-        sort={"date": -1}
+        sort={"date": -1},
       )
     )
 
@@ -490,7 +498,10 @@ def fetch_all_inspections(id):
         ],
         page_index=index,
         page_size=size,
-        sort={"date": -1}
+        sort={"date": -1},
+        projection={
+          'violations':0
+        },
       )
     )
 

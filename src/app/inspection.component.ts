@@ -15,7 +15,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 
 export class InspectionComponent {
-	private const sHID = 'i_id';
+	private sHID = 'i_id';
 	private postFields = [{
 			'fieldnameForm': 'v_name',
 			'fieldnameAPI': 'violation_id',
@@ -67,7 +67,7 @@ export class InspectionComponent {
 		//From this point, the updated sHID:b_id and sHID:r are available
 
 		
-		this.theForm.v = this.webService.v.setPostForm(this, this.postFields)
+		this.theForm['v'] = this.webService['v'].setPostForm(this, this.postFields)
 	}
 	
 	changePage(aPageNav){

@@ -8,7 +8,7 @@ import { FormBuilder, Validators } from '@angular/forms';//c4, 8
   styleUrls: ['./businesses.component.css']
 })
 export class BusinessesComponent {
-	private const sHID = 'b';
+	private sHID = 'b';
 	
 	sesStoID = this.sHID + '_page';
 	

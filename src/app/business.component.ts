@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { WebService } from './web.service';//C2,5
 import { ActivatedRoute } from '@angular/router';//C2,20
-import { FormBuilder, Validators } from '@angular/forms';//c4, 8
+import { FormBuilder, Validators,FormGroup } from '@angular/forms';//c4, 8
 import { AuthService } from './auth.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -15,7 +15,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 
 export class BusinessComponent {
-	private const sHID = 'b_id';
+	private sHID = 'b_id';
 	private postFields = [{
 			'fieldnameForm': 'name',
 			'fieldnameAPI': 'username',
@@ -34,7 +34,9 @@ export class BusinessComponent {
 		}
 	];
 	
-	theForm = {};
+	theForm = {
+		'r':new FormGroup(),
+	};
 	sesStoID = this.sHID + '_page';
 	
 	constructor(//C2,6
@@ -46,6 +48,7 @@ export class BusinessComponent {
 	){}
 	
 	ngOnInit(){
+		console.log(this['formBuilder']['group']({}))
 		this.sesStoID = this.sHID + '_' + this.route.snapshot.params[this.sHID] + '_page';
 		
 		if (sessionStorage[this.sesStoID] && sessionStorage[this.sesStoID] > 0){
@@ -63,16 +66,16 @@ export class BusinessComponent {
 			'page': this.page[this.sesStoID],
 			//'sessionPageName': this.sesStoID,
 		});
-		this.webService.getInspections({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
+		/*this.webService.getInspections({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
 			'page': this.page[this.sesStoID],
 			//'sessionPageName': this.sesStoID,
-		});
+		});*/
 		//From this point, the updated sHID:b_id and sHID:r are available
 		
 		//console.log(this.route.snapshot.params[this.sHID] == this.webService.r.lastID())
 
-		
-		this.theForm['r'] = this.webService.r.setPostForm(this, this.postFields)
+		console.log(['busness thForm',this.webService.r,this,this.postFields])
+		this.theForm.r = this.webService.r.setPostForm(this, this.postFields)
 	}
 	
 	changePage(aPageNav){

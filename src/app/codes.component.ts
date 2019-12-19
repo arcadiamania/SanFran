@@ -11,7 +11,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./codes.component.css']
 })
 export class CodesComponent {
-	private const sHID = 'c';
+	private sHID = 'c';
 	
 	sesStoID = this.sHID + '_page';
 	

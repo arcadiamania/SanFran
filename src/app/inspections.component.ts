@@ -15,7 +15,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 
 export class InspectionsComponent {
-	private const sHID = 'i';
+	private sHID = 'i';
 	sesStoID = this.sHID + '_page';
 	
 	vForm;//c4, 8
@@ -68,10 +68,10 @@ export class InspectionsComponent {
 		});
 		
 		
-		this.webService.getViolation({
+		this.webService.getViolation(/*{
 			'page': this.page[this.sesStoID],
 			[this.sHID]: this.route.snapshot.params[this.sHID]
-		});
+		}*/);
 		
 		//console.log(this.webService[this.sHID].list)
 	}//C3,10
@@ -90,7 +90,7 @@ export class InspectionsComponent {
 		
 		console.log(['onSubmit() vals before post',formData,targetSHID,params] )
 		
-		this.webService.postForm(params);
+		this.webService['postForm'](params);
 		
 		formData.reset();
 	};

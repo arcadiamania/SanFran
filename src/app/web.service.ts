@@ -8,7 +8,7 @@ Need to remove the @jwt_required decoratort from post request on review and buis
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';//C3,6
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup} from '@angular/forms';
 
 
 
@@ -40,7 +40,7 @@ export class WebService {
 		'v':this.getViolations,
 		'v_id':this.getViolation,
 	}*/
-	const root = 'http://localhost:5000/api/v1.0';
+	root = 'http://localhost:5000/api/v1.0';
 	
 	constructor(private http: HttpClient){
 		for (let s_m of this.serviceMapping){
@@ -66,7 +66,7 @@ export class WebService {
 		
 		var _get = getFun;
 		var _post_form = false;
-		var _post_fields = false;
+		var _post_fields = [];
 		var _web_service = webService;
 		
 		this.url;
@@ -175,15 +175,15 @@ export class WebService {
 		this.paramObj = function (){
 			let ids = this.idPath();
 			let pObj = {};
-			for (let i in _path) {
+			for (let i =0; i < _path.length; i++) {
 				if (ids.includes(_path[i])){
 					let key = _path[i-1].substring(0,1)+'_id';
 					pObj[key] = _path[i];
 				}
 			}
 			pObj['self'] = _self;
-			if (_pagination.current_page){//Pages start at one, rest of values are falsy
-				pObj['page'] = _pagination.current_page;
+			if (_pagination['current_page']){//Pages start at one, rest of values are falsy
+				pObj['page'] = _pagination['current_page'];
 			}
 			
 			return pObj;
@@ -194,21 +194,21 @@ export class WebService {
 		this.canNextPage = function(currentPage, amount){
 			if (!this.hasResults || _hasError){return false};
 			
-			currentPage = (typeof currentPage === "undefined") ? _pagination.current_page : currentPage;
+			currentPage = (typeof currentPage === "undefined") ? _pagination['current_page'] : currentPage;
 			amount = (typeof amount === "undefined") ? 1 : amount;
 			
 			//console.log([currentPage,amount,_pagination.last_page])
 			
-			if (currentPage + amount <= _pagination.last_page){
+			if (currentPage + amount <= _pagination['last_page']){
 				return currentPage + amount;
 			} else {
-				return _pagination.last_page;
+				return _pagination['last_page'];
 			}
 		};
 		this.canPreviousPage = function(currentPage, amount){
 			if (!this.hasResults || _hasError){return false};
 			
-			currentPage = (typeof currentPage === "undefined") ? _pagination.current_page : currentPage;
+			currentPage = (typeof currentPage === "undefined") ? _pagination['current_page'] : currentPage;
 			amount = (typeof amount === "undefined") ? 1 : amount;
 			
 			if (currentPage - amount >= 1){
@@ -222,14 +222,14 @@ export class WebService {
 			
 			let pageList = [];
 			pageDistance = (typeof pageDistance === "undefined") ? 3 : pageDistance;
-			let currentPage = _pagination.current_page;
-			let lastPage = _pagination.last_page
+			let currentPage = _pagination['current_page'];
+			let lastPage = _pagination['last_page']
 			
 			//Ensure using valid page - TODO check if no results can pass other validation
 			currentPage = (currentPage <= lastPage) ? currentPage : lastPage;
 			currentPage = (currentPage >= 1) ? currentPage : 1;
 			
-			if (lastPage == currentPage == 1){
+			if (lastPage == (currentPage == 1)){
 				this.navPages = [{
 					'pageText': 'All displayed',
 					'pageNumber': 1,
@@ -315,13 +315,13 @@ export class WebService {
 			objWithLocations = (typeof objWithLocations === "undefined") ? _private_list : objWithLocations;
 
 			for (let item of objWithLocations){
-				let search_term = false;
+				let search_term = '';
 				if (item['business_latitude'] && item['business_longitude']){
 					search_term = item['search_term'] = item['business_latitude']+', '+item['business_longitude']; 
 				} else if (item['business_address'] && item['business_city'] && item['business_postal_code']) {
 					search_term = item['business_address']+', '+item['business_city']+', '+item['business_postal_code'];
 				}
-				if (search_term){
+				if (search_term != ''){
 					search_term = encodeURIComponent(search_term);
 					item['business_location'] = "https://maps.google.com/maps?q="+search_term+((_private_list.length == 1)?'&t=k&z=19':'&z=15')+"&ie=UTF8&iwloc=&output=embed"
 					//console.log(item['business_location'])
@@ -334,45 +334,58 @@ export class WebService {
 		
 		
 		this.setPostForm = function(componentRef, postFields){
+			if (!this.hasResults || _hasError){
+				console.log(['setPostForm had error',componentRef])
+				/*console.log(['setPostForm had error',componentRef['formBuilder'], componentRef['formBuilder']['group'], componentRef['formBuilder']['group']({})]);
+				console.log(['setPostForm had error',componentRef['formBuilder']['group'], componentRef['formBuilder']['group']({})]);
+				console.log(['setPostForm had error',componentRef['formBuilder']['group']({})]);*/
+
+				
+				return false};
+
 			console.log(['componentRef, postFields',componentRef, postFields])
 			_post_fields = postFields;
 			
 			let group = {}
 			
 			for (let p_f of postFields){
-				group[p_f.fieldnameForm] = (p_f.hasValidation) ? [p_f.defaultVal, Validators.required] : p_f.defaultVal;
+				group[p_f['fieldnameForm']] = (p_f.hasValidation) ? [p_f['defaultVal'], Validators.required] : p_f.defaultVal;
 			}
 			
-			console.log('componentRef',componentRef,componentRef.formBuilder)
-			console.log('_web_service',_web_service,_web_service.formBuilder)
+			console.log('componentRef',componentRef,componentRef['formBuilder'])
+			console.log('_web_service',_web_service,_web_service['formBuilder'])
 			
-			_post_form = componentRef.formBuilder.group(group);
+			_post_form = componentRef['formBuilder']['group'](group);
 			
 			return _post_form;
 		};
 		this.onSubmit = function(){
+			if (!this.hasResults || _hasError || !_post_form){return false};
+
 			//Should be polymorphic - any form on any page,
 			let formData = _post_form;		
 			
 			let params = {
-				'formValue': formData.value,
+				'formValue': formData['value'],
 				'reqFields': _post_fields,
 				'sHID': _name,
 			};
 			
-			console.log(['this.onSubmit',params,formData,formData.value,_post_fields,_name])
+			console.log(['this.onSubmit',params,formData,formData['value'],_post_fields,_name])
 
 			
 			this.postForm();
 			
 			//this.webService.postForm(params);//How to access service helper - do I have access?, Just to be safe include
 			
-			formData.reset();
+			formData['reset']();
 		};
 		this.postForm = function(){
+			if (!this.hasResults || _hasError){return false};
+
 			let postData = new FormData();
 			for (let r_f of _post_fields){
-				postData.append(r_f.fieldnameAPI, _post_form.value[r_f.fieldnameForm])
+				postData.append(r_f.fieldnameAPI, _post_form['value'][r_f.fieldnameForm])
 			};
 			
 			//console.log(['this.postForm',postData,this.url,_get,_web_service,this.paramObj()])
@@ -387,13 +400,14 @@ export class WebService {
 		};
 		
 		this.isInvalid = function(control){
-			return _post_form.controls[control].invalid && _post_form.controls[control].touched;
+			return true
+			return !_post_form['controls'][control] || _post_form['controls'][control]['invalid'] && _post_form['controls'][control]['touched'];
 		}
 		this.isUntouched = function(){
 			let untouched = false;
 			for (let p_f of _post_fields){
-				if (p_f.hasValidation){
-					untouched = untouched || _post_form.controls[p_f.fieldnameForm].pristine
+				if (_post_form['controls'] && p_f['hasValidation']){
+					untouched = untouched || _post_form['controls'][p_f.fieldnameForm]['pristine']
 				}
 			}
 			return untouched;
@@ -401,7 +415,7 @@ export class WebService {
 		this.isIncomplete = function(){
 			let incomplete = false;
 			for (let p_f of _post_fields){
-				if (p_f.hasValidation){
+				if (p_f['hasValidation']){
 					incomplete = incomplete || this.isInvalid(p_f.fieldnameForm);
 				} 
 			}
@@ -412,19 +426,19 @@ export class WebService {
 	
 	
 	getCodes(params){
-		let page = params.page;
-		this.c = this.serviceStrut.c;
-		let helper = this.c;
+		let page = params['page'];
+		this['c'] = this.serviceStrut['c'];
+		let helper = this['c'];
 		
 		if (params.snapshot){
-			helper.setPath(["codes", params.snapshot.url[1].path]);
+			helper.setPath(["codes", params['snapshot']['url'][1]['path']]);
 		}
 		
 		//let sessionPageName = params.sessionPageName;
 		
 		console.log(helper.fullPath() + '?pn=' + page)
 		return this.http.get(
-			helper.fullPath() 
+			helper['fullPath']() 
 			+ '?pn=' + page
 		).subscribe(
 			response => {
@@ -440,15 +454,15 @@ export class WebService {
 	}
 	
 	getBusinesses(params){
-		let page = params.page;
-		this.b = this.serviceStrut.b;
-		let helper = this.b;
+		let page = params['page'];
+		this['b'] = this.serviceStrut['b'];
+		let helper = this['b'];
 		helper.setPath(["businesses"]);
 		
 		//let sessionPageName = params.sessionPageName;
 		
 		return this.http.get(
-			helper.fullPath() 
+			helper['fullPath']() 
 			+ '?pn=' + page
 		).subscribe(
 			response => {
@@ -463,18 +477,20 @@ export class WebService {
 		);
 	}
 	getBusiness(params){//C3,10
+		console.log(['getBusiness(params)',params])
+
 		let b_id = params.b_id;
-		this.b_id = this.serviceStrut.b_id;
-		let helper = this.b_id;
+		this['b_id'] = this.serviceStrut['b_id'];
+		let helper = this['b_id'];
 		helper.setPath(["businesses",b_id]);
 		
-		console.log(['return this.http.get', this.http.get(helper.fullPath())])
+		console.log(['return this.http.get', helper['fullPath'](), this.http.get(helper['fullPath']())])
 		
 		return this.http.get(
-			helper.fullPath()
+			helper['fullPath']()
 		).subscribe(
 			response => {
-				//console.log(['getBusiness response',response])
+				console.log(['getBusiness response',response])
 				helper.setResponce(response).next();
 			},
 			error => {
@@ -485,18 +501,18 @@ export class WebService {
 	}
 	getReviews(params){
 		console.log(['getReviews(params)',params])
-		let page = params.page;
+		let page = params['page'];
 		//let b_id = params.b_id;
-		let sessionPageName = params.sessionPageName;
+		let sessionPageName = params['sessionPageName'];
 		
 		if (params['self']){
-			this.r = params['self'];
+			this['r'] = params['self'];
 		} else {
-			this.r = this.serviceStrut['r'];
+			this['r'] = this.serviceStrut['r'];
 		}
-		let helper = this.r;
+		let helper = this['r'];
 		
-		helper.setPath(this.b_id.path().concat(["reviews"]));
+		helper.setPath(this['b_id'].path().concat(["reviews"]));
 		
 		return this.http.get(
 			helper.fullPath()
@@ -515,16 +531,16 @@ export class WebService {
 	}
 	getInspections(params){
 		console.log(['getInspections(params)',params])
-		let page = params.page;
+		let page = params['page'];
 		
 		if (params['self']){
-			this.i = params['self'];
+			this['i'] = params['self'];
 		} else {
-			this.i = this.serviceStrut['i'];
+			this['i'] = this.serviceStrut['i'];
 		}
-		let helper = this.i;
+		let helper = this['i'];
 		
-		helper.setPath(this.b_id.path().concat(["inspections"]));
+		helper.setPath(this['b_id'].path().concat(["inspections"]));
 		
 		return this.http.get(
 			helper.fullPath()
@@ -540,19 +556,19 @@ export class WebService {
 		);
 	}
 	getInspection(params){
-		let snapshot = params.snapshot;
-		let page = params.page;
-		let i_id = params.i_id;
+		let snapshot = params['snapshot'];
+		let page = params['page'];
+		let i_id = params['i_id'];
 		if (params['self']){
-			this.i_id = params['self'];
+			this['i_id'] = params['self'];
 		} else {
-			this.i_id = this.serviceStrut.i_id;
+			this['i_id'] = this.serviceStrut['i_id'];
 		}
-		let helper = this.i_id;
+		let helper = this['i_id'];
 		
 		let pathSnapshot = [];
-		for (let url of snapshot.url){
-			pathSnapshot.push(url.path);
+		for (let url of snapshot['url']){
+			pathSnapshot.push(url['path']);
 		}
 		console.log(pathSnapshot)
 		
@@ -574,16 +590,16 @@ export class WebService {
 	}
 	getViolations(params){
 		console.log(['getViolations(params)',params])
-		let page = params.page;
+		let page = params['page'];
 		
 		if (params['self']){
-			this.v = params['self'];
+			this['v'] = params['self'];
 		} else {
-			this.v = this.serviceStrut['v'];
+			this['v'] = this.serviceStrut['v'];
 		}
-		let helper = this.v;
+		let helper = this['v'];
 		
-		helper.setPath(this.i_id.path().concat(["violations"]));
+		helper.setPath(this['i_id'].path().concat(["violations"]));
 		
 		return this.http.get(
 			helper.fullPath()
@@ -598,6 +614,8 @@ export class WebService {
 			}
 		);
 	}
+	getReview(){}
+	getViolation(){}
 	
 	vote(votingURL){
 		console.log(votingURL)
@@ -605,7 +623,7 @@ export class WebService {
 			votingURL
 		).subscribe(
 			response => {
-				this.getReviews(this.r.paramObj());
+				this.getReviews(this['r'].paramObj());
 			}
 		);
 	}
