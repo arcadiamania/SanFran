@@ -47,6 +47,47 @@ def get_pagination_index(request, default_page_size=12, pn_name='pn', ps_name='p
   return user_start_index, ps
 
 
+def update_counts(business_to_update, database_con):
+  print(['update_counts',business_to_update])
+  results = prepare_results(find_one_document(
+    database_con=database_con,
+    id_for_result=business_to_update
+  ))['results']
+
+  print(['results', results])
+
+  if len(results) > 0:
+    results = results[0]
+    b_violation_count = 0;
+    update_obj = {'form': {
+      'review_count': len(results['reviews']),
+      'inspection_count': len(results['inspections']),
+    }}
+
+    print(['for in_pos in range(len(results["inspections"])):',results['inspections']])
+
+    for in_pos in range(len(results['inspections'])):
+      print([str(in_pos)+'inspections.'+str(in_pos)+'.violation_count', update_obj])
+      violation_path = 'inspections.'+str(in_pos)+'.violation_count'
+      violation_count = len(results['inspections'][in_pos]['violations'])
+      update_obj['form'][violation_path] = violation_count
+      b_violation_count += violation_count
+      print([in_pos,violation_path,violation_count, update_obj])
+
+
+    update_obj['form']['violation_count'] = b_violation_count
+
+  update_document(
+    database_con=database_con,
+    id_val=business_to_update,
+    request_obj=update_obj,
+    required_fields=list(update_obj['form'].keys()),
+    auto_key_val_pairs=[
+      ["last_modified", datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')]
+    ]
+  )
+  return make_response(jsonify({'success': 'Business values updated'}), 202)
+
 
 # Public
 def valid_id_format(id_for_format, base=16, id_length=24):
@@ -154,6 +195,8 @@ def find_one_document(database_con, id_for_result, sub_doc_path=[], sort=None, p
                           page_size=1,
                           id_name=id_name,
                           id_function=id_function)
+
+
 
   return database_con.aggregate(pipe_line)
 
@@ -275,16 +318,16 @@ def create_find(id_for_results=None, return_one=False, sub_doc_path=[], sort_obj
     pipe_line.append(project_obj)
 
   levels_to_traverse = r_p['r_l_path_id'].copy() if return_one else r_p['r_l_container_id'].copy()
-  print(['levels_to_traverse', levels_to_traverse])
-  print(["r_p['r_l_path'].copy()", r_p['r_l_path'].copy()])
+  #print(['levels_to_traverse', levels_to_traverse])
+  #print(["r_p['r_l_path'].copy()", r_p['r_l_path'].copy()])
 
   for sub_doc in r_p['r_l_path'].copy():
     sub_match_obj = {"$match": {
       ".".join(levels_to_traverse): id_function(id_for_results)
     }}
-    print(levels_to_traverse)
+    #print(levels_to_traverse)
     levels_to_traverse.pop(0)
-    print(levels_to_traverse)
+    #print(levels_to_traverse)
 
     unwind_obj = {'$unwind': {
       'path': '$' + sub_doc
@@ -357,12 +400,12 @@ def update_document(database_con, id_val, request_obj, required_fields=[], optio
                                id_name=id_name,
                                id_function=id_function)
 
-  print(['318 update_tuple',update_tuple])
+  #print(['318 update_tuple',update_tuple])
 
   update_result = update_document_db(database_con=database_con,
                                      update_tuple=update_tuple,
                                      is_sub_doc=True if len(fields_inc_update)>0 else False)
-  print(['322 update_result', update_result])
+  #print(['322 update_result', update_result])
 
   return update_result
 
@@ -428,7 +471,7 @@ def create_update(id_val, request_obj, required_fields=[], optional_fields=[], a
   #v._id ObjectId('5dee77c28124f41ab8144200')
 
 
-  print(['id_to_update', id_to_update])
+  #print(['id_to_update', id_to_update])
 
   updated_item = {}
 
@@ -445,7 +488,7 @@ def create_update(id_val, request_obj, required_fields=[], optional_fields=[], a
       updated_item[update_str_path(fields_inc_update, key_in_pair)] = val_in_pair
   print(['updated_item', updated_item])
   for r_f in required_fields:
-    updated_item[update_str_path(fields_inc_update, r_f)] = request_obj.form[r_f]
+    updated_item[update_str_path(fields_inc_update, r_f)] = request_obj['form'][r_f]
   print(['updated_item', updated_item])
 
   updated_item = {"$set": updated_item}

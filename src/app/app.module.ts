@@ -9,6 +9,11 @@ import { HttpClientModule } from '@angular/common/http';//To reg with main modul
 import { RouterModule } from '@angular/router';//C2,13
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';//c4 6
 
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { AlertModule } from 'ngx-bootstrap/alert';
+
 import { NavComponent } from './nav.component';
 import { HomeComponent } from './home.component';//C2,14
 import { BusinessesComponent } from './businesses.component';//To import custom ts stuff
@@ -54,8 +59,8 @@ var routes = [
     NavComponent,
 	//As there is no reviews components, assuming the last subdoc doesnt need component
     InspectionsComponent,
-	InspectionComponent,
-	CodesComponent
+    InspectionComponent,
+    CodesComponent
   ],
   imports: [
     BrowserModule,
@@ -63,8 +68,8 @@ var routes = [
     HttpClientModule, //include the HttpClientModule in the imports list
     RouterModule.forRoot(routes),//C2,13
     ReactiveFormsModule, //c4 6
-	FormsModule,
-	
+	  FormsModule,
+	  /*Bootstrap*/AccordionModule, TabsModule, CollapseModule, AlertModule
   ],
   providers: [
     WebService,

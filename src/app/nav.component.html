@@ -1,4 +1,5 @@
 <!--Logiing in works, but doesn't update correctly when refreshed-->
+<script src="https://code.angularjs.org/1.4.8/angular.js" data-require="angular.js@*" data-semver="1.4.8"></script>
 <div class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
 	<span class="navbar-brand">Biz Directory</span>
 	<ul class="navbar-nav">
@@ -9,12 +10,12 @@
 			<a class="nav-link" routerLink='/businesses'>Businesses</a>
 		</li>
 	</ul>
-	
+
 	<div class="form-inline ml-auto">
 		<button *ngIf="!authService.loggedIn" class="btn btn-outline-light" (click)="authService.login()"
 		>Log In</button>
 		<button *ngIf="authService.loggedIn" class="btn btn-outline-light" (click)="authService.logout()"
 		>Log Out</button>
 	</div>
-	
+
 </div>

@@ -9,7 +9,7 @@ import datetime
 from functools import wraps
 import bcrypt
 from flask_cors import CORS
-from generic_functions import get_pagination_index, valid_id_format, prepare_results, api_link, is_error_message, find_one_document, find_all_documents, update_document, insert_document, delete_item
+from generic_functions import get_pagination_index, valid_id_format, prepare_results, api_link, is_error_message, find_one_document, find_all_documents, update_document, insert_document, delete_item, update_counts
 
 DEBUG = False
 
@@ -105,6 +105,8 @@ def fix_review_count():
     return make_response(output)
 '''
 
+
+
 @app.route("/api/v1.0/codes/<int:c_id>", methods=["GET"])#token will get picked up
 def show_zipcode(c_id):
     #if not valid_id_format(id):
@@ -114,7 +116,7 @@ def show_zipcode(c_id):
       find_all_documents(
         database_con=businesses,
         page_index=index,
-        page_size=size,
+        page_size=5,
         sort={
           'business_name' : 1
         },
@@ -124,9 +126,10 @@ def show_zipcode(c_id):
         },
         final_match={
           'business_postal_code': c_id
-        }
+        },
       )
     )
+
 
     print(find_result)
 
@@ -158,9 +161,45 @@ def show_all_businesses():
 
     return make_response(jsonify(find_result), 200)
 
+'''def update_counts(b_id):
+  results = prepare_results(find_one_document(
+    database_con=businesses,
+    id_for_result=b_id
+  )).results
+
+  if results.length > 0:
+    b_violation_count = 0;
+    update_obj = {'form': {
+      'review_count': results.reviews.length,
+      'inspection_count': results.inspections.length,
+    }}
+
+    for in_pos in range(results.inspections.length):
+      violation_path = 'inspections.'+in_pos+'.violation_count'
+      violation_count = results.inspections[in_pos].violations.length
+      update_obj[violation_path] = violation_count
+      b_violation_count += violation_count
+
+    update_obj['violation_count'] = b_violation_count
+
+  update_document(
+    database_con=businesses,
+    id_val=b_id,
+    request_obj=update_obj,
+    required_fields=list(update_obj.form.keys()),
+    auto_key_val_pairs=[
+      ["last_modified", datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')]
+    ]
+  )
+  return make_response(jsonify({'success': 'Business values updated'}), 202)
+
+
+
+#202'''
 
 @app.route("/api/v1.0/businesses/<string:id>", methods=["GET"])#token will get picked up
 def show_one_business(id):
+    update_counts(id, businesses)
     if not valid_id_format(id):
         return make_response(jsonify({"error": "id is not a 24 digit hexidecimal string"}),404)
 
@@ -262,7 +301,7 @@ def edit_business(id):
         ["last_modified", datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')]
       ]
     )
-
+    update_counts(id, businesses)
     #update_result = prepare_results(update_result)
 
     return make_response(jsonify({"updated": api_link(request)}), 200)
@@ -280,6 +319,8 @@ def delete_business(id):
       database_con=businesses,
       id_val=id
     )
+
+    update_counts(id, businesses)
 
     return make_response(jsonify({}), 200)
 
@@ -333,6 +374,8 @@ def fetch_review(b_id, r_id):
       )
     )
 
+    update_counts(b_id, businesses)
+
     if find_result and len(find_result['results']) > 0:
       return make_response(jsonify( find_result ),200)
     else:
@@ -363,6 +406,8 @@ def add_new_review(b_id):
     ]
   )
 
+  update_counts(b_id, businesses)
+
   if is_error_message(result):
     return make_response(jsonify(result), 404)
   else:
@@ -383,6 +428,7 @@ def vote_review(b_id, r_id, vote):
       return make_response(jsonify({"error": "Vote value is invalid"}), 404)
     #TODO Check if already voted
 
+
     print(['vote_review 2', b_id, r_id, vote])
 
 
@@ -397,12 +443,7 @@ def vote_review(b_id, r_id, vote):
       )
     )
 
-    print(['vote_review 3', find_result])
-
-    print(['vote_review 4', b_id, r_id, vote])
     vote_count = find_result['results'][0]['votes'][vote] + 1;
-
-    print(['vote_review 5', vote_count])
 
     req2 = {'form':{'votes.'+vote: vote_count}}
 
@@ -422,7 +463,7 @@ def vote_review(b_id, r_id, vote):
       ]
     )
 
-    print(['vote_review 6', vote_count, update_result])
+    update_counts(b_id,businesses)
 
     return make_response(jsonify({"updated": "vote"}), 200)
 
@@ -453,6 +494,8 @@ def edit_review(b_id, r_id):
       ]
     )
 
+    update_counts(b_id, businesses)
+
     return make_response(jsonify({"updated": api_link(request)}), 200)
 
 
@@ -474,6 +517,8 @@ def delete_review(b_id, r_id):
         "reviews"
       ],
     )
+
+    update_counts(b_id, businesses)
 
     return make_response(jsonify({}), 200)
 
@@ -500,10 +545,12 @@ def fetch_all_inspections(id):
         page_size=size,
         sort={"date": -1},
         projection={
-          'violations':0
+          #'violations':0
         },
       )
     )
+
+    update_counts(id, businesses)
 
     if find_result and len(find_result['results']) > 0:
       return make_response(jsonify( find_result ),200)
@@ -528,6 +575,8 @@ def fetch_inspection(b_id, i_id):
         sort={"date": -1}
       )
     )
+
+    update_counts(b_id, businesses)
 
     if find_result and len(find_result['results']) > 0:
       return make_response(jsonify(find_result), 200)
@@ -561,6 +610,8 @@ def add_new_inspection(b_id):
       ["inspection_date", datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')],
     ]
   )
+
+  update_counts(b_id, businesses)
 
   if is_error_message(result):
     return make_response(jsonify(result), 404)
@@ -596,6 +647,8 @@ def edit_inspection(b_id, i_id):
         ["last_mofified", datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')],
       ]
     )
+
+    update_counts(b_id, businesses)
 
     return make_response(jsonify({"updated": api_link(request)}), 200)
 
@@ -637,6 +690,8 @@ def delete_inspection(b_id, i_id):
       ],
     )
 
+    update_counts(b_id, businesses)
+
     return make_response(jsonify({}), 200)
 
 
@@ -661,6 +716,8 @@ def fetch_all_violations(b_id, i_id):
       page_size=size
     )
   )
+
+  update_counts(b_id, businesses)
 
   if find_result and len(find_result['results']) > 0:
     return make_response(jsonify(find_result), 200)
@@ -687,6 +744,7 @@ def fetch_violation(b_id, i_id, v_id):
       ],
     )
   )
+  update_counts(b_id, businesses)
 
   if find_result and len(find_result['results']) > 0:
     return make_response(jsonify(find_result), 200)
@@ -720,6 +778,7 @@ def add_new_violation(b_id, i_id):
       ["date", datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')],
     ]
   )
+  update_counts(b_id, businesses)
 
   if is_error_message(result):
     return make_response(jsonify(result), 404)
@@ -758,6 +817,7 @@ def edit_violation(b_id, i_id, v_id):
       ["last_modified", datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')],
     ]
   )
+  update_counts(b_id, businesses)
 
   return make_response(jsonify({"updated": api_link(request)}), 200)
 
@@ -780,9 +840,8 @@ def edit_violation(b_id, i_id, v_id):
 
 
 @app.route("/api/v1.0/businesses/<string:b_id>/inspections/<string:i_id>/violations/<string:v_id>", methods=["DELETE"])
-#@jwt_required
-#@admin_required
 def delete_violation(b_id, i_id, v_id):
+  print('tried to delete violation')
   # Need code to validate what is entered
   if not valid_id_format(b_id):
     return make_response(jsonify({"error": "Business id is not a 24 digit hexidecimal string"}), 404)
@@ -800,8 +859,12 @@ def delete_violation(b_id, i_id, v_id):
       "violations"
     ],
   )
+  update_counts(b_id, businesses)
 
   return make_response(jsonify({}), 200)
+
+
+
 
 
 

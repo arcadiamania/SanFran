@@ -5,32 +5,32 @@ import { FormBuilder, Validators } from '@angular/forms';//c4, 8
 @Component({
   selector: 'businesses',
   templateUrl: './businesses.component.html',
-  styleUrls: ['./businesses.component.css']
+  styleUrls: ['./bootstrap.min.css'],
 })
 export class BusinessesComponent {
 	private sHID = 'b';
-	
+
 	sesStoID = this.sHID + '_page';
-	
+
 	constructor(//C2,6
 		private webService: WebService,
 		private formBuilder: FormBuilder
 	){}
-	
+
 	ngOnInit(){//console.log('this.sesStoID',this.sesStoID)
 		if (sessionStorage[this.sesStoID] && sessionStorage[this.sesStoID] > 0){
 			this.page[this.sesStoID] = sessionStorage[this.sesStoID];
 		}//console.log(['sessionStorage',sessionStorage])
-		
+
 		this.webService.getBusinesses({
 			'page': this.page[this.sesStoID],
 			//'sessionPageName': this.sesStoID,
 		});
 	}
-	
+
 	changePage(aPageNav){
 		let pageN = aPageNav.pageNumber;
-		
+
 		if (pageN){
 			this.page[this.sesStoID] = pageN;
 			sessionStorage[this.sesStoID] = pageN;
@@ -40,6 +40,6 @@ export class BusinessesComponent {
 			});
 		}
 	}
-	
+
 	page={[this.sHID +'_page']:1};
 }

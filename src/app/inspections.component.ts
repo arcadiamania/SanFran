@@ -9,18 +9,16 @@ import { DomSanitizer } from '@angular/platform-browser';
 @Component({//C2,16
   selector: 'inspections',
   templateUrl: './inspections.component.html',
-  styleUrls: [
-	'./inspections.component.css'
-  ]
+  styleUrls: ['./bootstrap.min.css'],
 })
 
 export class InspectionsComponent {
 	private sHID = 'i';
+
+	theForm = {};
 	sesStoID = this.sHID + '_page';
-	
-	vForm;//c4, 8
-	
-	
+
+
 	constructor(//C2,6
 		private webService: WebService,
 		private route: ActivatedRoute,//C2,20
@@ -28,108 +26,92 @@ export class InspectionsComponent {
 		private authService: AuthService,
 		public sanitizer: DomSanitizer
 	){}
-	
+
 	private postFields = [{
-			'fieldnameForm': 'v_id',//name
-			'fieldnameAPI': 'violation_id',
+			'fieldnameForm': 'in_date',//name
+			'fieldnameAPI': 'inspection_date',
 			'defaultVal': '',
 			'hasValidation': true
 		},{
-			'fieldnameForm': 'v_description',//review
-			'fieldnameAPI': 'violation_description',
+			'fieldnameForm': 'in_id',//review
+			'fieldnameAPI': 'inspection_id',
 			'defaultVal': '',
 			'hasValidation': true
 		},{
-			'fieldnameForm': 'v_risk',//stars
-			'fieldnameAPI': 'risk_category',
+			'fieldnameForm': 'in_score',//stars
+			'fieldnameAPI': 'inspection_score',
+			'defaultVal': '',
+			'hasValidation': true
+		},{
+			'fieldnameForm': 'in_type',//stars
+			'fieldnameAPI': 'inspection_type',
 			'defaultVal': '',
 			'hasValidation': true
 		}
 	];
-	
+
 	ngOnInit(){
-		//console.log('this.sesStoID',this.sesStoID)
-		let group = {}
-		for (let p_f of this.postFields){
-			group[p_f.fieldnameForm] = (p_f.hasValidation) ? [p_f.defaultVal, Validators.required] : p_f.defaultVal;
-		}
-		this.vForm = this.formBuilder.group(group);//c4 8
-		
-		this.sesStoID = this.sHID + '_' + this.route.snapshot.params[this.sHID] + '_page';
-		
+		this.sesStoID = this.sHID + '_' + this.route.snapshot.params['b_id'] + '_page';
+
+		console.log([this.sesStoID,sessionStorage[this.sesStoID]])
+
 		if (sessionStorage[this.sesStoID] && sessionStorage[this.sesStoID] > 0){
 			this.page[this.sesStoID] = sessionStorage[this.sesStoID];
+		} else {//Page needs to be created/chnages to valid val (may be a mistake if there are no reviews)
+			sessionStorage[this.sesStoID] = this.page[this.sesStoID];
 		}
-		
+
 		//console.log(['sessionStorage',sessionStorage])
-		
-		this.webService.getInspections({
-			[this.sHID]: this.route.snapshot.params[this.sHID],
-		});
-		
-		
-		this.webService.getViolation(/*{
+
+		console.log(['this.route.snapshot',this.route.snapshot])
+
+		this.webService.getInspections({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
+			snapshot: this.route.snapshot,
 			'page': this.page[this.sesStoID],
-			[this.sHID]: this.route.snapshot.params[this.sHID]
-		}*/);
-		
-		//console.log(this.webService[this.sHID].list)
+		});
+		//console.log(this.webService.getSHFromURL('http://localhost:4200/businesses/5dee77c28124f41ab81441fe'))
+
+		//this.theForm['i_id'] = this.webService['i_id'].setPostForm(this, this.postFields)
 	}//C3,10
-	
-	onSubmit(){
-		console.log('in onSubmit()')
-		let formData = this.vForm; //Really want to this[targetSHID]Form
-		let targetSHID = 'v'
-		
-		
-		let params = {
-			'formValue': formData.value,
-			'reqFields': this.postFields,
-			'sHID': targetSHID,
-		};
-		
-		console.log(['onSubmit() vals before post',formData,targetSHID,params] )
-		
-		this.webService['postForm'](params);
-		
-		formData.reset();
-	};
-	
-	isInvalid(control){
-		return this.vForm.controls[control].invalid && this.vForm.controls[control].touched;
+	onInspectionSubmit(){console.log(['onInspectionSubmit()'])}
+	onViolationSubmit(){console.log(['onViolationSubmit()'])}
+	setViolation(url){
+	  /*var returns = this.webService.getSHFromURL(url)
+	  var subject = returns[1]
+	  var helper = returns[0]*/
+
+	  console.log(['setViolation url', url])
+
+	  this.webService.deleteByURL(url)
+
+
+    //console.log(this.webService.http.get(url))
+	  /*this.webService.getSHFromURL(url, function(_helper){
+	  #  console.log(['_helper about to delete using this as:', this]);
+	  #  this.delete();
+	  #});*/
+
+
+
 	}
-	isUntouched() {
-		let untouched = false;
-		for (let p_f of this.postFields){
-			if (p_f.hasValidation){
-				untouched = untouched || this.vForm.controls[p_f.fieldnameForm].pristine
-			}
-		}
-		return untouched;
-	} 
-	isIncomplete() {
-		let incomplete = false;
-		for (let p_f of this.postFields){
-			if (p_f.hasValidation){
-				incomplete = incomplete || this.isInvalid(p_f.fieldnameForm);
-			} 
-		}
-		incomplete = incomplete || this.isUntouched();
-		return incomplete;
+	setInspection(a){
+	  console.log(['setInspection()',a,b])
+	  this.webService.getSHFromURL(url, function(_helper){console.log('_helper');_helper.delete()})
+
 	}
-	
+
 	changePage(aPageNav){
 		let pageN = aPageNav.pageNumber;
-		
+
 		if (pageN){
 			this.page[this.sesStoID] = pageN;
 			sessionStorage[this.sesStoID] = pageN;
-			this.webService.getReviews({
-				[this.sHID]: this.route.snapshot.params[this.sHID],
-				'page':pageN
-			});
+			this.webService.getInspections({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
+        snapshot: this.route.snapshot,
+        'page': this.page[this.sesStoID],
+      });
 		}
 	}
-	
+
 	page={[this.sHID + (('_'+this.route.snapshot.params[this.sHID])+'_page')]:1};
 }

@@ -9,9 +9,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 @Component({//C2,16
   selector: 'inspection',
   templateUrl: './inspection.component.html',
-  styleUrls: [
-	'./inspection.component.css'
-  ]
+  styleUrls: ['./bootstrap.min.css'],
 })
 
 export class InspectionComponent {
@@ -33,10 +31,10 @@ export class InspectionComponent {
 			'hasValidation': false
 		}
 	];
-	
+
 	theForm = {};
 	sesStoID = this.sHID + '_page';
-	
+
 	constructor(//C2,6
 		private webService: WebService,
 		private route: ActivatedRoute,//C2,20
@@ -44,35 +42,35 @@ export class InspectionComponent {
 		private authService: AuthService,
 		public sanitizer: DomSanitizer
 	){}
-	
+
 	ngOnInit(){
-		
+
 		console.log(['getInspection(params)', this.route.snapshot])
 		this.sesStoID = this.sHID + '_' + this.route.snapshot.params[this.sHID] + '_page';
-		
+
 		if (sessionStorage[this.sesStoID] && sessionStorage[this.sesStoID] > 0){
 			this.page[this.sesStoID] = sessionStorage[this.sesStoID];
 		} else {//Page needs to be created/chnages to valid val (may be a mistake if there are no reviews)
 			sessionStorage[this.sesStoID] = this.page[this.sesStoID];
 		}
-		
+
 		this.webService.getInspection({
 			[this.sHID]: this.route.snapshot.params[this.sHID],
 			snapshot: this.route.snapshot
-			
+
 		});
 		this.webService.getViolations({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
 			'page': this.page[this.sesStoID],
 		});
 		//From this point, the updated sHID:b_id and sHID:r are available
 
-		
+
 		this.theForm['v'] = this.webService['v'].setPostForm(this, this.postFields)
 	}
-	
+
 	changePage(aPageNav){
 		let pageN = aPageNav.pageNumber;
-		
+
 		if (pageN){
 			this.page[this.sesStoID] = pageN;
 			sessionStorage[this.sesStoID] = pageN;
@@ -81,6 +79,6 @@ export class InspectionComponent {
 			});
 		}
 	}
-	
+
 	page={[this.sHID + (('_'+this.route.snapshot.params[this.sHID])+'_page')]:1};
 }

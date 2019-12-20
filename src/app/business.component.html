@@ -21,9 +21,9 @@
 			<div *ngFor = "let business of webService.b_id.list | async"><!--C3, from michel email-->
 				<div class="card text-white bg-primary mb-3"
 
-					style="cursor: pointer"><!--[routerLink]="['/businesses', business._id]"-->
+					style="cursor: pointer">
 					<div class="card-header">
-						{{ business.business_name }}
+            <h2>{{ business.business_name }}</h2>
 					</div>
 					<div class="card-body">
 						Location: {{ business.business_address }}, {{ business.business_city }}, {{ business.business_postal_code }}
@@ -40,10 +40,11 @@
 
 						</div>
 					</div>
-					<div class="card-footer">
-						Showing {{ business.review_count }}
-						reviews available
-					</div>
+					<div class="card-footer" >
+            <button type="button" class="btn btn-outline-info btn-lg btn-block" [routerLink]="['/businesses', business._id, 'inspections']">
+						  View {{business.inspection_count}} inspections ({{ business.violation_count }} violations)
+					  </button>
+          </div>
 					<!--Could add more but nahh-->
 				</div>
 			</div>
@@ -73,6 +74,9 @@
 					  (click)="webService.vote(webService.r.url + '/'+ review._id + '/vote/down')">
 					    {{ review.votes.down }} 👎
 				  </label>
+          <label class="btn btn-outline-secondary">
+					<input type="radio" name="delete" id="delete"  autocomplete="off"
+					  (click)="webService.deleteByURL(webService.r.url + '/'+ review._id)">Moderate review</label>
 				</div>
 			</div>
 		</div>
@@ -95,7 +99,7 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<h2>Please review this business</h2>
-			<!----><form [formGroup]="theForm.r" (ngSubmit)="webService.r.onSubmit()">
+			<form [formGroup]="theForm.r" (ngSubmit)="webService.r.onSubmit()">
 				<div class="form-group">
 					<label for="name">Name</label>
 					<input type="text" id="name" name="name" class="form-control" formControlName="name"

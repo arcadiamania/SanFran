@@ -9,9 +9,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 @Component({//C2,16
   selector: 'business',
   templateUrl: './business.component.html',
-  styleUrls: [
-	'./business.component.css'
-  ]
+  styleUrls: ['./bootstrap.min.css'],
 })
 
 export class BusinessComponent {
@@ -63,10 +61,7 @@ export class BusinessComponent {
 			'page': this.page[this.sesStoID],
 			//'sessionPageName': this.sesStoID,
 		});
-		this.webService.getInspections({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
-			'page': this.page[this.sesStoID],
-			//'sessionPageName': this.sesStoID,
-		});
+
 		//From this point, the updated sHID:b_id and sHID:r are available
 
 		//console.log(this.route.snapshot.params[this.sHID] == this.webService.r.lastID())

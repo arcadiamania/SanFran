@@ -1,9 +1,9 @@
 <!--h1>Biz Directory</h1>
 
 <h2>There are {{ business_list.length }} businesses in the directory</h2>
- 
+
  <h2>The first business is {{ business_list[0].name }}</h2>
- 
+
  <div *ngFor="let business of business_list">
 	 <p>Name: {{ business.name }} <br>
 	 City: {{ business.city }} <br>
@@ -23,7 +23,7 @@
 					[routerLink]="['/businesses', business._id]"
 					style="cursor: pointer"><!--C1,19-->
 					<div class="card-header">
-						{{ business.business_name }}
+            <h2>{{ business.business_name }}</h2>
 					</div>
 					<div class="card-body">
 						@{{ business.business_address }}, {{ business.business_city }}, {{ business.business_postal_code }}
@@ -39,8 +39,8 @@
 			</div>
 		</div> <!-- col -->
 	</div> <!-- row -->
-	
-	
+
+
 	<nav aria-label="Page navigation example">
 	  <ul class="pagination justify-content-center">
 		<li class="page-item" style="cursor:pointer"
@@ -50,5 +50,5 @@
 		</li>
 	  </ul>
 	</nav>
-	
+
 </div> <!-- container -->

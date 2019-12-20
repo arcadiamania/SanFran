@@ -5,17 +5,17 @@ import { ActivatedRoute } from '@angular/router';//C2,20
 @Component({
  selector: 'navigation',
  templateUrl: './nav.component.html',
- styleUrls: []
+ styleUrls: ['./bootstrap.min.css'],
 })
 
-export class NavComponent { 
+export class NavComponent {
 	constructor(
 		private authService: AuthService,
 		private route: ActivatedRoute
 	) {}
-	
-	
+
+
 	setBreadcrumbs(path){
-		
+
 	}
 }

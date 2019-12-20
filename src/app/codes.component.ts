@@ -8,36 +8,36 @@ import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'codes',
   templateUrl: './codes.component.html',
-  styleUrls: ['./codes.component.css']
+  styleUrls: ['./bootstrap.min.css'],
 })
 export class CodesComponent {
 	private sHID = 'c';
-	
+
 	sesStoID = this.sHID + '_page';
-	
+
 	constructor(//C2,6
 		private webService: WebService,
 		private formBuilder: FormBuilder,
 		private route: ActivatedRoute,//C2,20
 		public sanitizer: DomSanitizer
 	){}
-	
+
 	ngOnInit(){//console.log('this.sesStoID',this.sesStoID)
 		if (sessionStorage[this.sesStoID] && sessionStorage[this.sesStoID] > 0){
 			this.page[this.sesStoID] = sessionStorage[this.sesStoID];
 		}//console.log(['sessionStorage',sessionStorage])
-		
+
 		this.webService.getCodes({
 			'page': this.page[this.sesStoID],
 			snapshot: this.route.snapshot,
 			//'sessionPageName': this.sesStoID,
 		});
 	}
-	
+
 	changePage(aPageNav){
 		console.log(['pageNav',aPageNav,this.webService])
 		let pageN = aPageNav.pageNumber;
-		
+
 		if (pageN){
 			this.page[this.sesStoID] = pageN;
 			sessionStorage[this.sesStoID] = pageN;
@@ -47,6 +47,6 @@ export class CodesComponent {
 			});
 		}
 	}
-	
+
 	page={[this.sHID +'_page']:1};
 }

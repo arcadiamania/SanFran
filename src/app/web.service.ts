@@ -41,6 +41,7 @@ export class WebService {
 		'v_id':this.getViolation,
 	}*/
 	root = 'http://localhost:5000/api/v1.0';
+	rootURL = 'http://localhost:4200';
 
 	constructor(private http: HttpClient){
 		for (let s_m of this.serviceMapping){
@@ -356,6 +357,8 @@ export class WebService {
 			//Should be polymorphic - any form on any page,
 			let formData = _post_form;
 
+			//TODO submit new and update
+
 			let params = {
 				'formValue': formData['value'],
 				'reqFields': _post_fields,
@@ -412,7 +415,61 @@ export class WebService {
 			incomplete = incomplete || this.isUntouched();
 			return incomplete;
 		}
+		this.delete = function(url){
+      _http.delete(url).subscribe((res)=>{
+        location.reload()
+        //this.webService.getSHFromURL(url, function(helper_){console.log(helper_)})
+      })
+		}
 	};
+
+	deleteByURL(url){
+	  console.log(['deleteByURL(url){',url,this.http])
+	  this.http.delete(url).subscribe((res)=>{
+	    location.reload()
+	    //this.getSHFromURL(url, function(helper_){console.log(helper_)})
+	  })
+	}
+
+	getSHFromURL(individualURL, callbackFun){
+	  //identify _id
+	  console.log(individualURL)
+	  var removeRoot = individualURL.replace(this.rootURL,'')
+	  removeRoot = removeRoot.replace(this.root,'')
+	  console.log(removeRoot)
+	  var removeParams = removeRoot.split('?')[0];
+	  console.log(removeParams)
+	  var path = removeRoot.split('/')
+	  if (path[0] == ''){path.shift()}
+	  console.log(path)
+
+	  var serviceHelperID;
+	  if ((path.length % 2) == 1){
+	    //last is the long name
+	    serviceHelperID = path[path.length-1].substring(0,1)
+	    console.log(serviceHelperID)
+	  } else {
+	    //last is the id
+	    serviceHelperID = path[path.length-2].substring(0,1)+'_id'
+	    console.log(serviceHelperID)
+	  }
+
+	  var helper =  this.serviceStrut[serviceHelperID];
+
+	  helper.setPath(path);
+
+		return [helper, this.http.get(this.root + removeRoot).subscribe(
+			response => {
+				console.log(['getServiceHelperFromPath response',this.root + removeRoot,path,helper,serviceHelperID,response])
+				helper.setResponce(response).next();
+				callbackFun.call(helper, helper)
+			},
+			error => {
+				helper.setError(error);
+			}
+		)]
+	}
+
 
 
 	getCodes(params){
@@ -521,6 +578,7 @@ export class WebService {
 	}
 	getInspections(params){
 		console.log(['getInspections(params)',params])
+		let snapshot = params['snapshot'];
 		let page = params['page'];
 
 		if (params['self']){
@@ -530,7 +588,16 @@ export class WebService {
 		}
 		let helper = this['i'];
 
-		helper.setPath(this['b_id'].path().concat(["inspections"]));
+		let pathSnapshot = [];
+		for (let url of snapshot['url']){
+			pathSnapshot.push(url['path']);
+		}
+
+
+
+		helper.setPath(pathSnapshot);
+
+		console.log(pathSnapshot)
 
 		return this.http.get(
 			helper.fullPath()
@@ -607,64 +674,11 @@ export class WebService {
 	getReview(){}
 	getViolation(){}
 
+
 	vote(votingURL){
 		console.log(votingURL)
-		this.http.get(
-			votingURL
-		).subscribe(
-			response => {
+		this.http.get(votingURL).subscribe(response => {
 				this.getReviews(this['r'].paramObj());
-			}
-		);
+		});
 	}
-
-
-
-	/*functionsBySHID={'b':this.getBusinesses,'b_id':this.getBusiness,'r':this.getReviews,'r_id':this.getReview,'i':this.getInspections,'i_id':this.getInspection,'v':this.getViolations,'v_id':this.getViolation}
-
-	postForm(params){
-		console.log(['postForm(params)', params])
-		let formValue = params.formValue;
-		let reqFields = params.reqFields;
-		let callbackFun = this.functionsBySHID[params.sHID];
-		let serviceHelper = this.serviceStrut[params.sHID];
-
-		let postData = new FormData();
-
-		for (let r_f of reqFields){
-			postData.append(r_f.fieldnameAPI, formValue[r_f.fieldnameForm])
-		};
-
-
-		console.log(['values before post', postData,formValue,serviceHelper.fullPath(),reqFields,callbackFun,serviceHelper])
-		this.http.post(
-			serviceHelper.fullPath(), postData
-		).subscribe(
-			response => {
-				callbackFun.call(this, serviceHelper.paramObj());
-			}
-		);
-
-
-	};*/
-
-	/*postReview(params) {
-		let review = params.review;
-		//Assume that this.r has already been created - might need a check to ensure
-		let postData = new FormData();
-
-		req_fields = [ "username", "stars", "text"]
-
-		for (r_f of req_fields){
-			postData.append(r_f, review[r_f]);
-		}
-
-		this.http.post(
-			this.r.fullPath(), postData
-		).subscribe(
-			response => {
-				this.getReviews(this.r.paramObj());
-			}
-		);
-	};*/
 }
