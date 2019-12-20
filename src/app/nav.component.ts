@@ -16,9 +16,4 @@ export class NavComponent {
 		private route: ActivatedRoute,
 		private webService: WebService,
 	) {}
-
-
-	setBreadcrumbs(path){
-
-	}
 }

@@ -9,14 +9,14 @@
   <div class="row">
 		<div class="col-sm-12">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="http://localhost:4200">Home</a></li>
-        <li class="breadcrumb-item" *ngFor="let business of webService.b_id.list | async"><a href="{{webService.b_id.url}}">{{business.business_name}}</a></li>
+        <li class="breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
+        <li class="breadcrumb-item" *ngFor="let business of webService.b_id.list | async"><a [routerLink]="['/businesses', business._id]">{{business.business_name}}</a></li>
       <!--  <li class="breadcrumb-item" *ngIf="webService.b_id.asyncPath | async"><a href="{{webService.b_id.url}}">{{business.business_name}}</a></li>-->
         <li class="breadcrumb-item active">Inspections</li>
       </ol>
 
 
-      <div class="card">
+      <div *ngIf="authService.loggedIn" class="card">
         <div class="card-body">
           <h4 class="card-title">Add new inspection</h4>
             <form [formGroup]="theForm.i" (ngSubmit)="webService.i.onSubmit()">
@@ -27,7 +27,7 @@
                 <input placeholder="Inspection score"  type="text" id="in_score" name="in_score" class="form-control form-control-sm" formControlName="in_score" [ngClass]="{'error': webService.i.isInvalid('in_score')}">
               </div>
               <div class="form-group">
-                <input placeholder="Inspection Type"  type="text" id="in_type" name="in_type" class="form-control-sm form-control" formControlName="in_type" [ngClass]="{'error': webService.i.isInvalid('in_type')}">
+                <input placeholder="Inspection type"  type="text" id="in_type" name="in_type" class="form-control-sm form-control" formControlName="in_type" [ngClass]="{'error': webService.i.isInvalid('in_type')}">
               </div>
               <div *ngIf="webService.i.isIncomplete()" class="alert alert-dismissible alert-danger">
                 <span>Complete all fields before submitting</span>
@@ -54,23 +54,18 @@
 					</div>
 					<div class="card-body">
 						<p>Inspection {{ inspection.inspection_id }}:</p>
-            <div class="btn-group" role="group" aria-label="Third group">
+            <div *ngIf="authService.loggedIn" class="btn-group" role="group" aria-label="Inspector group">
               <button type="button" class="btn btn-warning" (click)="webService.deleteByURL(webService.i.url+'/'+inspection._id)">Add violation</button>
 <!--              <button type="button" class="btn btn-info" (click)="webService.deleteByURL(webService.i.url+'/'+inspection._id)">Update</button>-->
               <button type="button" class="btn btn-danger" (click)="webService.deleteByURL(webService.i.url+'/'+inspection._id)">Remove</button>
             </div>
 					</div>
+          <div *ngIf="authService.loggedIn">
 					<div class="card-footer bg-secondary" *ngIf="inspection.violation_count == 0">
 						Identifed no violations
 					</div>
 					<div class="card-footer bg-secondary" *ngIf="inspection.violation_count != 0">
             <h5>Identifed {{ inspection.violation_count }} violations:</h5>
-
-
-
-
-
-
             <div class="card"
               *ngFor = "let violation of inspection.violations"
               [ngClass]="{'bg-danger': violation.risk_category == 'High Risk', 'bg-warning': violation.risk_category == 'Moderate Risk', 'bg-info': violation.risk_category == 'Low Risk'}">
@@ -85,6 +80,7 @@
                 </div>
               </div>
             </div>
+          </div>
 
             <!---->
             <!--form [formGroup]="theForm.i" (ngSubmit)="onViolationSubmit()">
@@ -104,9 +100,6 @@
               <button *ngIf="!webService.v.isIncomplete() && form_v_id" type="submit" name="updating" data-value="{{webservice.v_id.path}} update" class="btn btn-primary">Update {{webservice.v_id.lastID()}}</button>
               <button *ngIf="!webService.v.isIncomplete() && !form_v_id" type="submit" name="creating" data-value="{{webservice.i_id.path}} delete" class="btn btn-primary">New violation on {{webservice.i_id.lastID()}}</button>
             </form>-->
-
-
-
 					</div>
 				</div>
 			</div>

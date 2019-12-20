@@ -10,6 +10,9 @@
 			<a class="nav-link text-primary" routerLink='/businesses'>Businesses</a>
 		</li>
 	</ul>
+
+
+
   <!--ol-- class="breadcrumb ">
   <li class="breadcrumb-item"><a href="#">Home</a></li>
   <li class="breadcrumb-item"><a href="#">Library</a></li>
@@ -17,13 +20,15 @@
 </ol-->
 
 	<div class="form-inline ml-auto">
-		<button *ngIf="!authService.loggedIn" class="btn btn-outline-light" (click)="authService.login()"
+		<button *ngIf="!authService.loggedIn" class="btn btn-primary" (click)="authService.login()"
 		>Log In</button>
-		<button *ngIf="authService.loggedIn" class="btn btn-outline-light" (click)="authService.logout()"
+		<button *ngIf="authService.loggedIn" class="btn btn-primary" (click)="authService.logout()"
 		>Log Out</button>
 	</div>
 
 </div>
+
+
 
 <!--nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#">Navbar</a>

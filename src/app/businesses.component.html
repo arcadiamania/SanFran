@@ -1,7 +1,7 @@
 
 <div class="container" style="margin-top:50px;">
   <ol class="breadcrumb">
-  <li class="breadcrumb-item"><a href="http://localhost:4200">Home</a></li>
+  <li class="breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
   <li class="breadcrumb-item active">Businesses</li>
 </ol>
 	<div class="row">
@@ -20,7 +20,7 @@
 					<div class="card-footer">
 						{{ business.review_count }} reviews available
 					</div>
-					<div class="card-footer">
+					<div *ngIf="authService.loggedIn"  class="card-footer">
 						{{ business.violation_count }} violations from {{ business.inspection_count }} inspections
 					</div>
 					<!--Could add more but nahh-->
@@ -40,7 +40,7 @@
 	  </ul>
 	</nav>
 
-      <div class="card">
+      <div *ngIf="authService.loggedIn" class="card">
         <div class="card-header"><h3 class="card-title">Add new business</h3></div>
         <div class="card-body">
             <form [formGroup]="theForm.b" (ngSubmit)="webService.b.onSubmit()">

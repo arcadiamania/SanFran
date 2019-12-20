@@ -1,5 +1,5 @@
 #TODO breadcrumbs
-
+import http.client
 from flask import Flask, request, jsonify, make_response
 from bson import ObjectId
 from pymongo import MongoClient
@@ -35,7 +35,8 @@ default_ps = 10
 def jwt_required(func):
     @wraps(func)
     def jwt_required_wrapper(*args, **kwargs):
-        #print()
+        testAuth()
+        print(['request.headers', request.headers])
         #token = request.args.get('token')
         token = None
         if 'x-access-token' in request.headers:
@@ -897,8 +898,9 @@ def login():
 
 
 @app.route('/api/v1.0/logout', methods=['GET'])
-@jwt_required
+#@jwt_required
 def logout():
+    print('logging out')
     token = None
     if 'x-access-token' in request.headers:
         token = request.headers['x-access-token']
@@ -908,7 +910,19 @@ def logout():
         blacklist.insert_one({'token':token})
         return make_response(jsonify({'message':'Logout successful'}), 200)
 
+def testAuth():
+  conn = http.client.HTTPSConnection("dev-gmilmwkg.auth0.com")
 
+  payload = "{\"client_id\":\"lIlQYzwvG8zNPfHhWjKxrhcAmuIMZLLS\",\"client_secret\":\"rrMHrlSKbNJMojcvG1RcJwXSNv0-p4vOdYvwuBf_EaAByAW0-kvTPPnacJPe7P4v\",\"audience\":\"http://localhost:5000/api/v1.0\",\"grant_type\":\"client_credentials\"}"
+
+  headers = {'content-type': "application/json"}
+
+  conn.request("POST", "/oauth/token", payload, headers)
+
+  res = conn.getresponse()
+  data = res.read()
+
+  print(data.decode("utf-8"))
 
 
 if __name__ == "__main__":

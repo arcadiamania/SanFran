@@ -598,13 +598,16 @@ export class WebService {
 		let helper = this['i'];
 
 		let pathSnapshot = [];
-		for (let url of snapshot['url']){
-			pathSnapshot.push(url['path']);
+		if (snapshot && snapshot['url']){
+      for (let url of snapshot['url']){
+        pathSnapshot.push(url['path']);
+      }
+      helper.setPath(pathSnapshot);
 		}
 
 
 
-		helper.setPath(pathSnapshot);
+
 
 		console.log(pathSnapshot)
 

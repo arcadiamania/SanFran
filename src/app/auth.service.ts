@@ -14,7 +14,7 @@ export class AuthService {
     createAuth0Client({
       domain: "dev-gmilmwkg.auth0.com",
       client_id: "dCDbtgqRf4McJPYvuWk9tacrs9IOehOq",
-      redirect_uri:  "http://localhost:4200"
+      redirect_uri: `http://localhost:4200`
     })
   ) as Observable<Auth0Client>).pipe(
     shareReplay(1), // Every subscription receives the same shared value

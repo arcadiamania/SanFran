@@ -3,6 +3,7 @@ import { WebService } from './web.service';//C2,5
 import { FormBuilder, Validators } from '@angular/forms';//c4, 8
 import { ActivatedRoute } from '@angular/router';//C2,20
 import { DomSanitizer } from '@angular/platform-browser';
+import { AuthService } from './auth.service';
 
 
 @Component({
@@ -19,7 +20,9 @@ export class CodesComponent {
 		private webService: WebService,
 		private formBuilder: FormBuilder,
 		private route: ActivatedRoute,//C2,20
-		public sanitizer: DomSanitizer
+		public sanitizer: DomSanitizer,
+		private authService: AuthService,
+
 	){}
 
 	ngOnInit(){//console.log('this.sesStoID',this.sesStoID)

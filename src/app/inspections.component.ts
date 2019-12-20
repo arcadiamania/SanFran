@@ -26,7 +26,7 @@ export class InspectionsComponent {
 			'fieldnameForm': 'in_score',//stars
 			'fieldnameAPI': 'inspection_score',
 			'defaultVal': '',
-			'hasValidation': true
+			'hasValidation': false
 		},{
 			'fieldnameForm': 'in_type',//stars
 			'fieldnameAPI': 'inspection_type',
