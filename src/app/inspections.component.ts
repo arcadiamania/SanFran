@@ -14,20 +14,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 export class InspectionsComponent {
 	private sHID = 'i';
-
-	theForm = {};
 	sesStoID = this.sHID + '_page';
 
-
-	constructor(//C2,6
-		private webService: WebService,
-		private route: ActivatedRoute,//C2,20
-		private formBuilder: FormBuilder,//c4, 8
-		private authService: AuthService,
-		public sanitizer: DomSanitizer
-	){}
-
-	private postFields = [{
+	theForm = {};
+		private postFields = [{
 			'fieldnameForm': 'in_id',//review
 			'fieldnameAPI': 'inspection_id',
 			'defaultVal': '',
@@ -44,6 +34,19 @@ export class InspectionsComponent {
 			'hasValidation': true
 		}
 	];
+
+
+
+
+	constructor(//C2,6
+		private webService: WebService,
+		private route: ActivatedRoute,//C2,20
+		private formBuilder: FormBuilder,//c4, 8
+		private authService: AuthService,
+		public sanitizer: DomSanitizer
+	){}
+
+
 
 	ngOnInit(){
 	  console.log(this.route)

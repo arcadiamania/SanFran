@@ -181,9 +181,10 @@ export class WebService {
 			return (ids) ? ids[ids.length - 1] : false;
 		};
 		this.paramObj = function (){
+		  console.log(this.idPath())
 			let ids = this.idPath();
 			let pObj = {};
-			for (let i =0; i < _path.length; i++) {
+			for (let i =0; i < _path.length && ids; i++) {
 				if (ids.includes(_path[i])){
 					let key = _path[i-1].substring(0,1)+'_id';
 					pObj[key] = _path[i];
@@ -401,7 +402,7 @@ export class WebService {
 		};
 
 		this.isInvalid = function(control){
-		  console.log(control)
+		  //console.log(control)
 			return !_post_form['controls'][control] || _post_form['controls'][control]['invalid'] && _post_form['controls'][control]['touched'];
 		}
 		this.isUntouched = function(){

@@ -38,6 +38,7 @@
             <button type="button" class="btn btn-outline-info btn-lg btn-block" [routerLink]="['/businesses', business._id, 'inspections']">
               View {{business.inspection_count}} inspections ({{ business.violation_count }} violations)
 					  </button>
+            <button type="button" class="btn btn-danger" (click)="webService.deleteByURL(webService.b_id.url)" [routerLink]="['/']">Remove</button>
           </div>
 					<!--Could add more but nahh-->
 				</div>
