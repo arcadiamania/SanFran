@@ -28,18 +28,6 @@ export class WebService {
 		{'sHID':'c',	'getFun':this.getCodes,	},
 	]
 
-
-	/*private serviceShorthand = ['b','b_id','r','r_id','i','i_id','v','v_id'];
-	private mapServiceGets = {
-		'b':this.getBusinesses,
-		'b_id':this.getBusiness,
-		'r':this.getReviews,
-		'r_id':this.getReview,
-		'i':this.getInspections,
-		'i_id':this.getInspection,
-		'v':this.getViolations,
-		'v_id':this.getViolation,
-	}*/
 	root = 'http://localhost:5000/api/v1.0';
 	rootURL = 'http://localhost:4200';
 
@@ -53,10 +41,7 @@ export class WebService {
 
 	//A data storage structure to help minimize code - will implement for loop if it gets any larger
 	private serviceHelper = function(name, getFun, webService){
-		var _private_list;
-		var _subject = new Subject();
-
-		var _path = [];
+	  var _path = [];
 		var _name = name;
 		var _root = webService.root;
 		var _http = webService.http;
@@ -71,9 +56,38 @@ export class WebService {
 		var _web_service = webService;
 
 		this.url;
-		this.list = _subject.asObservable();
+		this.appURL;
 		this.navPages = [];
 		this.hasResults = false;
+
+		var _private_list;
+		var _subject = new Subject();
+		this.list = _subject.asObservable();
+		this.setList = function (resultList){
+			_private_list = (resultList.hasOwnProperty('length')) ? resultList : [resultList];
+			console.log(_private_list)
+			return true;
+		};
+		this.next = function (){
+			return _subject.next(_private_list);
+		};
+
+    var _subject_path = new Subject();
+    this.asyncPath = _subject_path.asObservable();
+
+    this.setPath = function (pathList){
+			//Supports single literal and array
+			_path = (pathList.hasOwnProperty('length')) ? pathList : [pathList];
+			_subject_path.next(_path)
+
+			return true;
+		};
+    /*this.getPath = function(){
+      .subscribe(()=>{})
+      //needs to update when a path is updated - could be defined in the serviceHelper constructor - will come back if time
+    }*/
+
+
 
 		this.setGet = function(getFunction){
 			_get = getFunction;
@@ -99,6 +113,9 @@ export class WebService {
 				'count':res.count,
 			};
 
+
+
+
 			this.setList(res.results);
 
 			if (res.results.length > 0){
@@ -110,27 +127,19 @@ export class WebService {
 				this.hasResults=false;
 			};
 
-			this.setPages(3);//Number*2+1 is max pages to display - based on digit
+						this.setPages(3);//Number*2+1 is max pages to display - based on digit
 
 			console.log(this.navPages)
 			this.url = this.fullPath();
+			this.appURL = 'http://localhost:4200/'+this.pathName()
+
 
 			return _self;
 		};
-		this.setPath = function (pathList){
-			//Supports single literal and array
-			_path = (pathList.hasOwnProperty('length')) ? pathList : [pathList];
 
-			return true;
-		};
 
 		this.name = function(){
 			return _name;
-		};
-		this.setList = function (resultList){
-			_private_list = (resultList.hasOwnProperty('length')) ? resultList : [resultList];
-			console.log(_private_list)
-			return true;
 		};
 		this.setError = function(error){
 			//Avoid setting error as a falsy value... You cheeky sod
@@ -139,9 +148,7 @@ export class WebService {
 		this.hasError = function(){
 			return _hasError;
 		}
-		this.next = function (){
-			return _subject.next(_private_list);
-		};
+
 		//this.nextNav = function (){
 		//	return _nav_subject.next(_private_pages);
 		//};
@@ -394,6 +401,7 @@ export class WebService {
 		};
 
 		this.isInvalid = function(control){
+		  console.log(control)
 			return !_post_form['controls'][control] || _post_form['controls'][control]['invalid'] && _post_form['controls'][control]['touched'];
 		}
 		this.isUntouched = function(){
@@ -676,9 +684,17 @@ export class WebService {
 
 
 	vote(votingURL){
-		console.log(votingURL)
 		this.http.get(votingURL).subscribe(response => {
 				this.getReviews(this['r'].paramObj());
 		});
 	}
+
+	private _private_codes;
+	private _subject_codes = new Subject();
+	list_codes = this._subject_codes.asObservable();
+	getZipcodes(){
+	  return this.http.get('http://localhost:5000/api/v1.0/codes').subscribe(response => {this._subject_codes.next(response['results'])})
+  }
+
+
 }

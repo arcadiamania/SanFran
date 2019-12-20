@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { AuthService } from './auth.service';
 import { ActivatedRoute } from '@angular/router';//C2,20
+import { WebService } from './web.service';//C2,5
+
 
 @Component({
  selector: 'navigation',
@@ -11,7 +13,8 @@ import { ActivatedRoute } from '@angular/router';//C2,20
 export class NavComponent {
 	constructor(
 		private authService: AuthService,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private webService: WebService,
 	) {}
 
 

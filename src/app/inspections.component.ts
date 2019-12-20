@@ -28,11 +28,6 @@ export class InspectionsComponent {
 	){}
 
 	private postFields = [{
-			'fieldnameForm': 'in_date',//name
-			'fieldnameAPI': 'inspection_date',
-			'defaultVal': '',
-			'hasValidation': true
-		},{
 			'fieldnameForm': 'in_id',//review
 			'fieldnameAPI': 'inspection_id',
 			'defaultVal': '',
@@ -51,6 +46,7 @@ export class InspectionsComponent {
 	];
 
 	ngOnInit(){
+	  console.log(this.route)
 		this.sesStoID = this.sHID + '_' + this.route.snapshot.params['b_id'] + '_page';
 
 		console.log([this.sesStoID,sessionStorage[this.sesStoID]])
@@ -64,14 +60,18 @@ export class InspectionsComponent {
 		//console.log(['sessionStorage',sessionStorage])
 
 		console.log(['this.route.snapshot',this.route.snapshot])
-
+		this.webService.getBusiness({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
+			snapshot: this.route.snapshot,
+			b_id: this.route.snapshot.params['b_id'],
+			'map': true
+		});
 		this.webService.getInspections({//Only pass sessionPageName to subDocuments of sHID since that's what needs pagenation
 			snapshot: this.route.snapshot,
 			'page': this.page[this.sesStoID],
 		});
 		//console.log(this.webService.getSHFromURL('http://localhost:4200/businesses/5dee77c28124f41ab81441fe'))
 
-		//this.theForm['i_id'] = this.webService['i_id'].setPostForm(this, this.postFields)
+		this.theForm['i'] = this.webService['i'].setPostForm(this, this.postFields)
 	}//C3,10
 	onInspectionSubmit(){console.log(['onInspectionSubmit()'])}
 	onViolationSubmit(){console.log(['onViolationSubmit()'])}
@@ -94,8 +94,8 @@ export class InspectionsComponent {
 
 
 	}
-	setInspection(a){
-	  console.log(['setInspection()',a,b])
+	setInspection(url){
+	  //console.log(['setInspection()',a,b])
 	  this.webService.getSHFromURL(url, function(_helper){console.log('_helper');_helper.delete()})
 
 	}

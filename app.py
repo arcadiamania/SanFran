@@ -105,40 +105,6 @@ def fix_review_count():
     return make_response(output)
 '''
 
-
-
-@app.route("/api/v1.0/codes/<int:c_id>", methods=["GET"])#token will get picked up
-def show_zipcode(c_id):
-    #if not valid_id_format(id):
-    #    return make_response(jsonify({"error": "id is not a 24 digit hexidecimal string"}),404)
-    index, size = get_pagination_index(request, default_ps)
-    find_result = prepare_results(
-      find_all_documents(
-        database_con=businesses,
-        page_index=index,
-        page_size=5,
-        sort={
-          'business_name' : 1
-        },
-        projection={
-          'inspections':0,
-          'reviews':0
-        },
-        final_match={
-          'business_postal_code': c_id
-        },
-      )
-    )
-
-
-    print(find_result)
-
-
-    if find_result and len(find_result['results']) > 0:
-      return make_response(jsonify( find_result ),200)
-    else:
-        return make_response(jsonify({"error": "Zipcode has no SanFran businesses"}),404)
-
 @app.route("/api/v1.0/businesses", methods=["GET"])
 def show_all_businesses():
     print(businesses)
@@ -414,58 +380,6 @@ def add_new_review(b_id):
     result = prepare_results(result)
 
   return make_response(jsonify({"url": api_link(request, new_id=result)}), 201)
-
-@app.route("/api/v1.0/businesses/<string:b_id>/reviews/<string:r_id>/vote/<string:vote>", methods=["GET"])
-#@jwt_required
-def vote_review(b_id, r_id, vote):
-    print(['vote_review 1', b_id, r_id, vote])
-    #Need code to validate what is entered
-    if not valid_id_format(b_id):
-        return make_response(jsonify({"error": "Business id is not a 24 digit hexidecimal string"}),404)
-    elif not valid_id_format(r_id):
-        return make_response(jsonify({"error": "Review id is not a 24 digit hexidecimal string"}),404)
-    if not (vote == "up" or vote == "down"):
-      return make_response(jsonify({"error": "Vote value is invalid"}), 404)
-    #TODO Check if already voted
-
-
-    print(['vote_review 2', b_id, r_id, vote])
-
-
-
-    find_result = prepare_results(
-      find_one_document(
-        database_con=businesses,
-        id_for_result=r_id,
-        sub_doc_path=[
-          'reviews'
-        ]
-      )
-    )
-
-    vote_count = find_result['results'][0]['votes'][vote] + 1;
-
-    req2 = {'form':{'votes.'+vote: vote_count}}
-
-    #req2['form']['votes.'+vote] = vote_count
-
-    print(['vote_review 5.1', req2])
-
-    update_result = update_document(
-      database_con=businesses,
-      id_val=r_id,
-      request_obj=req2,
-      fields_inc_update=[
-        "reviews"
-      ],
-      auto_key_val_pairs=[
-        ['votes.'+str(vote), vote_count]
-      ]
-    )
-
-    update_counts(b_id,businesses)
-
-    return make_response(jsonify({"updated": "vote"}), 200)
 
 @app.route("/api/v1.0/businesses/<string:b_id>/reviews/<string:r_id>", methods=["PUT"])
 #@jwt_required
@@ -863,10 +777,91 @@ def delete_violation(b_id, i_id, v_id):
 
   return make_response(jsonify({}), 200)
 
+@app.route("/api/v1.0/codes", methods=["GET"])
+def get_distinct_zipcodes():
+    find_result = prepare_results(
+      find_all_documents(
+        database_con=businesses,
+        page_size=9000,
+        sort={
+          'business_postal_code' : -1
+        },
+        projection={
+          'business_postal_code':1,
+          '_id':0
+        },
+        distinct='business_postal_code'
+      )
+    )
+    print(find_result)
+    if find_result and len(find_result['results']) > 0:
+      return make_response(jsonify( find_result ),200)
+    else:
+        return make_response(jsonify({"error": "Zipcode has no SanFran businesses"}),404)
 
 
+@app.route("/api/v1.0/codes/<int:c_id>", methods=["GET"])#token will get picked up
+def show_zipcode(c_id):
+    index, size = get_pagination_index(request, default_ps)
+    find_result = prepare_results(
+      find_all_documents(
+        database_con=businesses,
+        page_index=index,
+        page_size=5,
+        sort={
+          'business_name' : 1
+        },
+        projection={
+          'inspections':0,
+          'reviews':0
+        },
+        final_match={
+          'business_postal_code': c_id
+        },
+      )
+    )
+    print(find_result)
+    if find_result and len(find_result['results']) > 0:
+      return make_response(jsonify( find_result ),200)
+    else:
+        return make_response(jsonify({"error": "Zipcode has no SanFran businesses"}),404)
 
+@app.route("/api/v1.0/businesses/<string:b_id>/reviews/<string:r_id>/vote/<string:vote>", methods=["GET"])
+def vote_review(b_id, r_id, vote):
+    if not valid_id_format(b_id):
+        return make_response(jsonify({"error": "Business id is not a 24 digit hexidecimal string"}),404)
+    elif not valid_id_format(r_id):
+        return make_response(jsonify({"error": "Review id is not a 24 digit hexidecimal string"}),404)
+    if not (vote == "up" or vote == "down"):
+      return make_response(jsonify({"error": "Vote value is invalid"}), 404)
 
+    find_result = prepare_results(
+      find_one_document(
+        database_con=businesses,
+        id_for_result=r_id,
+        sub_doc_path=[
+          'reviews'
+        ]
+      )
+    )
+
+    vote_count = find_result['results'][0]['votes'][vote] + 1;
+    req2 = {'form':{'votes.'+vote: vote_count}}
+    update_document(
+      database_con=businesses,
+      id_val=r_id,
+      request_obj=req2,
+      fields_inc_update=[
+        "reviews"
+      ],
+      auto_key_val_pairs=[
+        ['votes.'+str(vote), vote_count]
+      ]
+    )
+
+    update_counts(b_id, businesses)
+
+    return make_response(jsonify({"updated": "vote"}), 200)
 
 @app.route("/api/v1.0/login", methods=["GET"])
 def login():
@@ -900,33 +895,6 @@ def login():
 
     #return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm = "Login required"'})
 
-
-# def my_decorator(func):
-#     @wraps(func)
-#     def wrapper(*args, **kwargs):
-#         #print("Before the function")
-#         return_value = func(*args, **kwargs)
-#         func(*args, **kwargs)
-#         #print("After the function")
-#         return return_value
-#     return wrapper
-
-# @my_decorator
-# def say_hello():
-#     print("hello")
-#
-# @my_decorator
-# def shout_out(shout_value):
-#     return(shout_value.upper())
-#
-# @my_decorator
-# def whisper_it(whisper_value, value2):
-#     print(whisper_value.lower() + ' ' + value2.lower())
-#
-# say_hello()
-# shout_out('Hello')
-# whisper_it('Goodbye', 'Keaton')
-# print(shout_out('Keaton'))
 
 @app.route('/api/v1.0/logout', methods=['GET'])
 @jwt_required

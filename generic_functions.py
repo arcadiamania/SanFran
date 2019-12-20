@@ -359,7 +359,7 @@ def create_find(id_for_results=None, return_one=False, sub_doc_path=[], sort_obj
     {'$group': {
       '_id': None,
       'count': {'$sum': 1},
-      'results': {'$push': '$$ROOT'},
+      'results': {'$push': '$$ROOT'} if (not distinct) else {'$addToSet': '$'+distinct},
     }}, {'$project': {
       '_id': 0,
       'count': 1,

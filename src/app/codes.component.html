@@ -1,23 +1,14 @@
-<!--h1>Biz Directory</h1>
 
-<h2>There are {{ business_list.length }} businesses in the directory</h2>
-
- <h2>The first business is {{ business_list[0].name }}</h2>
-
- <div *ngFor="let business of business_list">
-	 <p>Name: {{ business.name }} <br>
-	 City: {{ business.city }} <br>
-	 Reviews: {{ business.review_count }}
-	 </p>
-</div-->
-
-
-<!--div class="jumbotron">
-	<h1>Biz Directory</h1>
-</div-->
-<div class="container" style="margin-top:100px;">
+<div class="container" style="margin-top:50px;">
 	<div class="row">
 		<div class="col-sm-12">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="http://localhost:4200">Back to ZipCode map...</a></li>
+<!--        <li class="breadcrumb-item" *ngFor="let code of webService.c.list | async"><a href="#">{{code.business_postal_code}}</a></li>-->
+      <!--  <li class="breadcrumb-item" *ngIf="webService.b_id.asyncPath | async"><a href="{{webService.b_id.url}}">{{business.business_name}}</a></li>-->
+      </ol>
+
+
 			<div *ngFor = "let business of webService.c.list | async"><!--webService.serviceStrut.b.list is the source-->
 				<div class="card text-white bg-primary mb-3"
 					[routerLink]="['/businesses', business._id]"
@@ -35,7 +26,7 @@
 							</div>
 							<style>.mapouter{position:relative;text-align:right;height:200px;width:100%;}.gmap_canvas {position:relative;overflow:hidden;background:none!important;height:200px;width:100%;}</style>
 						</div>
-						@{{ business.business_address }}, {{ business.business_city }}, {{ business.business_postal_code }}
+						@{{ business.business_address }}, {{ business.business_city }}, <span class="badge badge-pill badge-light">{{ business.business_postal_code }}</span>
 					</div>
 					<!--Could add more but nahh-->
 				</div>

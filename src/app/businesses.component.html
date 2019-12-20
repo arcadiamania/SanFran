@@ -15,7 +15,11 @@
 <!--div class="jumbotron">
 	<h1>Biz Directory</h1>
 </div-->
-<div class="container" style="margin-top:100px;">
+<div class="container" style="margin-top:50px;">
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="http://localhost:4200">Home</a></li>
+  <li class="breadcrumb-item active">Businesses</li>
+</ol>
 	<div class="row">
 		<div class="col-sm-12">
 			<div *ngFor = "let business of webService.b.list | async"><!--webService.serviceStrut.b.list is the source-->

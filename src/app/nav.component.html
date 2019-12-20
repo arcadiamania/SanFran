@@ -1,15 +1,20 @@
 <!--Logiing in works, but doesn't update correctly when refreshed-->
 <script src="https://code.angularjs.org/1.4.8/angular.js" data-require="angular.js@*" data-semver="1.4.8"></script>
-<div class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
-	<span class="navbar-brand">Biz Directory</span>
+<div class="navbar navbar-expand-sm bg-light navbar-light fixed-top">
+	<span class="navbar-brand">SanFran</span>
 	<ul class="navbar-nav">
 		<li class="nav-item">
-			<a class="nav-link" routerLink='/'>Home</a>
+			<a class="nav-link text-primary" routerLink='/'>ZipCodes</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" routerLink='/businesses'>Businesses</a>
+			<a class="nav-link text-primary" routerLink='/businesses'>Businesses</a>
 		</li>
 	</ul>
+  <!--ol-- class="breadcrumb ">
+  <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item"><a href="#">Library</a></li>
+  <li class="breadcrumb-item active">Data</li>
+</ol-->
 
 	<div class="form-inline ml-auto">
 		<button *ngIf="!authService.loggedIn" class="btn btn-outline-light" (click)="authService.login()"
@@ -19,3 +24,36 @@
 	</div>
 
 </div>
+
+<!--nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Features</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Pricing</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">About</a>
+      </li>
+    </ul>
+    <ol-- class="breadcrumb ">
+  <li class="breadcrumb-item"><a href="#">Home</a></li>
+  <li class="breadcrumb-item"><a href="#">Library</a></li>
+  <li class="breadcrumb-item active">Data</li>
+</ol>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav-->

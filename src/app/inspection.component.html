@@ -1,5 +1,5 @@
 
-<div class="container" style="margin-top:100px;">
+<div class="container" style="margin-top:50px;">
 	<div class="row">
 		<div class="col-sm-12">
 			<div *ngFor = "let inspection of webService.i_id.list | async"><!--C3, from michel email-->
@@ -39,7 +39,7 @@
 			<div class="card-footer" >
 				<div class="btn-group btn-group-toggle" data-toggle="buttons">
 				  <label class="btn btn-outline-success"><!--###Add angular class here with 'active' class -->
-					<input type="radio" name="options" id="upVote"  autocomplete="off" checked 
+					<input type="radio" name="options" id="upVote"  autocomplete="off" checked
 					  (click)="webService.vote()">
 					    TODO, have ADDRESSED check box
 				  </label>

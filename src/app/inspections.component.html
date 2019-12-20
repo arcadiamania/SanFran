@@ -1,7 +1,45 @@
 
-<div class="container" style="margin-top:100px;">
-	<div class="row">
+<div class="container" style="margin-top:50px;">
+
+
+
+
+
+
+  <div class="row">
 		<div class="col-sm-12">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="http://localhost:4200">Home</a></li>
+        <li class="breadcrumb-item" *ngFor="let business of webService.b_id.list | async"><a href="{{webService.b_id.url}}">{{business.business_name}}</a></li>
+      <!--  <li class="breadcrumb-item" *ngIf="webService.b_id.asyncPath | async"><a href="{{webService.b_id.url}}">{{business.business_name}}</a></li>-->
+        <li class="breadcrumb-item active">Inspections</li>
+      </ol>
+
+
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Add new inspection</h4>
+            <form [formGroup]="theForm.i" (ngSubmit)="webService.i.onSubmit()">
+              <div class="form-group">
+                <input placeholder="Inspection ID"  type="text" id="in_id" name="in_id" class="form-control form-control-sm" formControlName="in_id" [ngClass]="{'error': webService.i.isInvalid('in_id')}">
+              </div>
+              <div class="form-group">
+                <input placeholder="Inspection score"  type="text" id="in_score" name="in_score" class="form-control form-control-sm" formControlName="in_score" [ngClass]="{'error': webService.i.isInvalid('in_score')}">
+              </div>
+              <div class="form-group">
+                <input placeholder="Inspection Type"  type="text" id="in_type" name="in_type" class="form-control-sm form-control" formControlName="in_type" [ngClass]="{'error': webService.i.isInvalid('in_type')}">
+              </div>
+              <div *ngIf="webService.i.isIncomplete()" class="alert alert-dismissible alert-danger">
+                <span>Complete all fields before submitting</span>
+              </div>
+    <!--          <span *ngIf="webService.i.isIncomplete()">You must complete all fields</span>-->
+            <!--  <button *ngIf="!webService.i.isIncomplete()" type="submit" name="updating" data-value="{{webservice.i_id.path}} update" class="btn btn-primary">Update</button>-->
+            <button *ngIf="!webService.i.isIncomplete()" type="submit" name="creating" class="btn btn-primary">New inspection</button>
+            </form>
+        </div>
+      </div>
+
+
 			<div *ngFor = "let inspection of webService.i.list | async"><!--C3, from michel email-->
 				<div class="card text-white bg-primary mb-3"><!--[routerLink]="['/businesses', business._id]"-->
 					<div class="card-header">
@@ -18,7 +56,7 @@
 						<p>Inspection {{ inspection.inspection_id }}:</p>
             <div class="btn-group" role="group" aria-label="Third group">
               <button type="button" class="btn btn-warning" (click)="webService.deleteByURL(webService.i.url+'/'+inspection._id)">Add violation</button>
-              <button type="button" class="btn btn-info" (click)="webService.deleteByURL(webService.i.url+'/'+inspection._id)">Update</button>
+<!--              <button type="button" class="btn btn-info" (click)="webService.deleteByURL(webService.i.url+'/'+inspection._id)">Update</button>-->
               <button type="button" class="btn btn-danger" (click)="webService.deleteByURL(webService.i.url+'/'+inspection._id)">Remove</button>
             </div>
 					</div>
@@ -31,23 +69,24 @@
 
 
 
-            <!--form [formGroup]="theForm.i" (ngSubmit)="onInspectionSubmit()">
-              <div class="form-group">
-                <label for="inspection_id">Inspection ID</label>
-                <input type="text" id="inspection_id" name="inspection_id" class="form-control" formControlName="inspection_id" [ngClass]="{'error': webService.i.isInvalid('inspection_id')}">
+
+
+            <div class="card"
+              *ngFor = "let violation of inspection.violations"
+              [ngClass]="{'bg-danger': violation.risk_category == 'High Risk', 'bg-warning': violation.risk_category == 'Moderate Risk', 'bg-info': violation.risk_category == 'Low Risk'}">
+              <div class="card-header" >
+                <h4 class="card-title">{{violation.risk_category}}</h4>
               </div>
-              <div class="form-group">
-                <label for="inspection_score">Score</label>
-                <input type="text" id="inspection_score" name="inspection_score" class="form-control" formControlName="inspection_score" [ngClass]="{'error': webService.i.isInvalid('inspection_score')}">
+              <div class="card-body">
+                <p class="card-text">{{ violation.violation_description }}</p>
+                <div class="btn-group" role="group" aria-label="Violation actions">
+                  <button type="button" class="btn btn-success" (click)="webService.deleteByURL(webService.i.url+'/'+inspection._id+'/violations/'+violation._id)">Resolve</button>
+<!--                  <button type="button" class="btn btn-secondary" (click)="webService.deleteByURL(webService.i.url+'/'+inspection._id+'/violations/'+violation._id)">Edit</button>-->
+                </div>
               </div>
-              <div class="form-group">
-                <label for="inspection_type">Type</label>
-                <input type="text" id="inspection_type" name="inspection_type" class="form-control" formControlName="inspection_type" [ngClass]="{'error': webService.i.isInvalid('inspection_type')}">
-              </div>
-              <span *ngIf="webService.i.isIncomplete()">You must complete all fields</span>
-              <button *ngIf="!webService.i.isIncomplete()" type="submit" name="updating" data-value="{{webservice.i_id.path}} update" class="btn btn-primary">Update {{webservice.i_id.lastID()}}</button>
-              <button *ngIf="!webService.i.isIncomplete()" type="submit" name="creating" data-value="{{webservice.b_id.path}} delete" class="btn btn-primary">New inspection on {{webservice.b_id.lastID()}}</button>
-            </form><!-->
+            </div>
+
+            <!---->
             <!--form [formGroup]="theForm.i" (ngSubmit)="onViolationSubmit()">
               <div class="form-group">
                 <label for="v_name">Violation ID</label>
@@ -66,23 +105,6 @@
               <button *ngIf="!webService.v.isIncomplete() && !form_v_id" type="submit" name="creating" data-value="{{webservice.i_id.path}} delete" class="btn btn-primary">New violation on {{webservice.i_id.lastID()}}</button>
             </form>-->
 
-            <div class="card"
-              *ngFor = "let violation of inspection.violations"
-              [ngClass]="{'bg-danger': violation.risk_category == 'High Risk', 'bg-warning': violation.risk_category == 'Moderate Risk', 'bg-info': violation.risk_category == 'Low Risk'}">
-              <div class="card-header" >
-                <h4 class="card-title">{{violation.risk_category}}</h4>
-              </div>
-              <div class="card-body">
-                <p class="card-text">{{ violation.violation_description }}</p>
-                <div class="btn-group" role="group" aria-label="Violation actions">
-                  <button type="button" class="btn btn-success" (click)="webService.deleteByURL(webService.i.url+'/'+inspection._id+'/violations/'+violation._id)">Resolve</button>
-                  <button type="button" class="btn btn-secondary" (click)="webService.deleteByURL(webService.i.url+'/'+inspection._id+'/violations/'+violation._id)">Edit</button>
-                </div>
-              </div>
-            </div>
-
-
-
 
 
 					</div>
@@ -91,6 +113,8 @@
 		</div> <!-- col -->
 	</div> <!-- row -->
 </div> <!-- container -->
+
+
 
 <!--div class="row">
 	<div class="col-sm-12">
